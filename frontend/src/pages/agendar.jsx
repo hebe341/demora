@@ -4,6 +4,8 @@ import Footer from '../components/Layout/Footer';
 import CalendarPicker from '../components/Scheduling/CalendarPicker';
 import ServiceSelector from '../components/Scheduling/ServiceSelector';
 import PriceCalculator from '../components/Scheduling/PriceCalculator';
+import { useToast } from '../context/ToastContext';
+import { LoadingOverlay } from '../components/UI/LoadingSpinner';
 
 export default function Agendar() {
   const [step, setStep] = useState(1);
@@ -14,6 +16,8 @@ export default function Agendar() {
   const [photos, setPhotos] = useState([]);
   const [location, setLocation] = useState(null);
   const [notes, setNotes] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { addToast } = useToast();
 
   const handleNext = () => {
     if (step < 4) setStep(step + 1);
@@ -24,13 +28,24 @@ export default function Agendar() {
   };
 
   const handleSubmit = async () => {
-    // ✅ CORRIGIDO: Error handling completo
+    // ✅ CORRIGIDO: Error handling completo com Toast
     try {
       // Validar dados antes de enviar
-      if (!selectedDate || !selectedServices.length || !address) {
-        alert('⚠️ Por favor, preencha todos os campos obrigatórios');
+      if (!selectedDate) {
+        addToast('Por favor, selecione uma data', 'warning');
         return;
       }
+      if (!selectedServices.length) {
+        addToast('Por favor, selecione pelo menos um serviço', 'warning');
+        return;
+      }
+      if (!address) {
+        addToast('Por favor, insira o endereço', 'warning');
+        return;
+      }
+
+      setIsSubmitting(true);
+      addToast('Processando agendamento...', 'info', 0);
 
       const booking = {
         date: selectedDate,
@@ -44,13 +59,33 @@ export default function Agendar() {
       };
       
       // TODO: Conectar ao backend para enviar agendamento
-      // const response = await fetch('/api/bookings', { method: 'POST', body: JSON.stringify(booking) });
+      // const response = await fetch('/api/bookings', { 
+      //   method: 'POST', 
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(booking) 
+      // });
       // if (!response.ok) throw new Error('Falha ao agendar');
       
-      alert('✅ Agendamento realizado com sucesso!');
+      // Simulação de sucesso
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      addToast('✅ Agendamento realizado com sucesso!', 'success');
+      
+      // Limpar formulário
+      setStep(1);
+      setSelectedDate(null);
+      setSelectedServices([]);
+      setAddress('');
+      setCep('');
+      setPhotos([]);
+      setLocation(null);
+      setNotes('');
+      
     } catch (error) {
       console.error('Erro ao processar agendamento:', error);
-      alert(`❌ Erro: ${error.message || 'Falha ao agendar. Tente novamente.'}`);
+      addToast(`Erro: ${error.message || 'Falha ao agendar. Tente novamente.'}`, 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -219,6 +254,7 @@ export default function Agendar() {
         </div>
       </main>
 
+      <LoadingOverlay isVisible={isSubmitting} text="Processando seu agendamento..." />
       <Footer />
     </div>
   );
