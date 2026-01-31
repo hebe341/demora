@@ -35,6 +35,7 @@
     "sqlite3": "^5.1.6",
     "stripe": "^11.8.0",
     "twilio": "^3.75.0"
+    ,"web-push": "^3.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",

@@ -8,16 +8,18 @@ export default function Home(){
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow container py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h1 className="text-4xl font-bold mb-4">Leidy Cleaner</h1>
-            <p className="muted">Agende serviços de limpeza com facilidade. Personalize aparência e preferências.</p>
-            <div className="mt-6">
-              <a href="/agendar" className="btn-accent inline-block px-4 py-2 rounded-md">Agendar Agora</a>
+        <div className="max-w-3xl mx-auto">
+          <div className="card grid grid-cols-1 md:grid-cols-2 items-center gap-6">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold mb-3">Leidy Cleaner</h1>
+              <p className="muted mb-4">Agende serviços de limpeza com facilidade. Atendimento rápido, profissionais treinados e pagamentos seguros.</p>
+              <div className="mt-4">
+                <a href="/agendar" className="btn-primary">Agendar Agora</a>
+              </div>
             </div>
-          </div>
-          <div>
-            <PersonalizationPanel />
+            <div className="hidden md:block">
+              <PersonalizationPanel />
+            </div>
           </div>
         </div>
       </main>

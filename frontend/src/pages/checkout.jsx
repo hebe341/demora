@@ -3,6 +3,9 @@ import Header from '../components/Layout/Header';
 import Footer from '../components/Layout/Footer';
 import CheckoutForm from '../components/Payments/CheckoutForm';
 import LoyaltyPanel from '../components/Loyalty/LoyaltyPanel';
+import dynamic from 'next/dynamic';
+
+const PushManager = dynamic(() => import('../components/Notifications/PushManager'), { ssr: false });
 
 export default function CheckoutPage() {
   return (
@@ -11,12 +14,15 @@ export default function CheckoutPage() {
       <main className="flex-grow max-w-3xl mx-auto p-6 space-y-6">
         <h1 className="text-2xl font-bold">Checkout</h1>
         <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <CheckoutForm amount={150.00} />
+          <div className="card">
+            <CheckoutForm />
           </div>
-          <div>
+          <div className="card">
             <LoyaltyPanel />
           </div>
+        </div>
+        <div className="mt-4">
+          <PushManager />
         </div>
       </main>
       <Footer />

@@ -133,7 +133,7 @@ export default function Agendar() {
         </div>
 
         {/* Form Steps */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <div className="card mb-8">
           {step === 1 && (
             <CalendarPicker onDateSelected={setSelectedDate} />
           )}
@@ -154,7 +154,7 @@ export default function Agendar() {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="Rua, número, complemento, bairro, cidade"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600"
+                    className="w-full"
                   />
                   {/* Map preview (Google Maps embed if API key set, fallback OSM) */}
                   {(address || location) && (
@@ -170,7 +170,7 @@ export default function Agendar() {
                     value={cep}
                     onChange={(e) => setCep(e.target.value)}
                     placeholder="00000-000"
-                    className="w-48 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600"
+                    className="w-48"
                   />
                 </div>
 
@@ -205,7 +205,7 @@ export default function Agendar() {
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Ex: Apartamento com vidros especiais, animais de estimação..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600"
+                    className="w-full"
                     rows="4"
                   />
                 </div>
@@ -255,7 +255,7 @@ export default function Agendar() {
           <button
             onClick={handlePrev}
             disabled={step === 1}
-            className="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-400 transition"
+            className="btn-outline disabled:opacity-50 disabled:cursor-not-allowed"
           >
             ← Anterior
           </button>
@@ -263,14 +263,14 @@ export default function Agendar() {
           {step < 4 ? (
             <button
               onClick={handleNext}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition"
+              className="btn-primary"
             >
               Próximo →
             </button>
           ) : (
             <button
               onClick={handleSubmit}
-              className="px-8 py-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition text-lg"
+              className="btn-primary px-8 py-3 text-lg"
             >
               ✓ Confirmar Agendamento
             </button>

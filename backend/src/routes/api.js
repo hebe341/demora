@@ -33,6 +33,7 @@ const StaffController = require('../controllers/StaffController');
 const PhotosController = require('../controllers/PhotosController');
 const PublicReviewsController = require('../controllers/PublicReviewsController');
 const AuthController = require('../controllers/AuthController');
+const NotificationsController = require('../controllers/NotificationsController');
 
 // Middleware
 const { authenticateToken, authorizeRole } = require('../middleware/auth');
@@ -204,6 +205,19 @@ router.get('/reviews/service/:serviceId', (req, res) => {
 
 router.post('/reviews/public/:bookingId/respond', authenticateToken, authorizeRole(['admin']), (req, res) => {
   PublicReviewsController.respondToReview(req, res);
+});
+
+// ===== NOTIFICAÇÕES PUSH =====
+router.post('/notifications/subscribe', (req, res) => {
+  NotificationsController.subscribe(req, res);
+});
+
+router.post('/notifications/unsubscribe', (req, res) => {
+  NotificationsController.unsubscribe(req, res);
+});
+
+router.post('/notifications/send-test', authenticateToken, authorizeRole(['admin']), (req, res) => {
+  NotificationsController.sendTest(req, res);
 });
 
 router.get('/reviews/filter', (req, res) => {
