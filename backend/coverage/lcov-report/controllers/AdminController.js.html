@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">6.19% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/113</span>
+                <span class='fraction'>7/113</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">6.36% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/110</span>
+                <span class='fraction'>7/110</span>
             </div>
         
             
@@ -395,26 +395,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -716,19 +716,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * Admin Controller - Dashboard
  * Análises, relatórios, estatísticas
  */
 &nbsp;
-const sqlite3 = <span class="cstat-no" title="statement not covered" >require('sqlite3').verbose();</span>
-const path = <span class="cstat-no" title="statement not covered" >require('path');</span>
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 &nbsp;
-const DB_PATH = <span class="cstat-no" title="statement not covered" >path.join(__dirname, '../../backend_data/limpeza.db');</span>
+const DB_PATH = path.join(__dirname, '../../backend_data/limpeza.db');
 &nbsp;
-const getDb = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >new sqlite3.Database(DB_PATH);</span></span>
-const getAsync = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>b, sql, params = <span class="branch-0 cbranch-no" title="branch not covered" >[])</span> =&gt; {</span>
+const getDb = <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >new sqlite3.Database(DB_PATH);</span>
+const getAsync = <span class="fstat-no" title="function not covered" >(d</span>b, sql, params = <span class="branch-0 cbranch-no" title="branch not covered" >[])</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >  return new Promise(<span class="fstat-no" title="function not covered" >(r</span>esolve, reject) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    db.get(sql, params, <span class="fstat-no" title="function not covered" >(e</span>rr, row) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      if (err) <span class="cstat-no" title="statement not covered" >reject(err);</span></span>
@@ -737,7 +737,7 @@ const getAsync = <span class="cstat-no" title="statement not covered" ><span cla
   });
 };
 &nbsp;
-const allAsync = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>b, sql, params = <span class="branch-0 cbranch-no" title="branch not covered" >[])</span> =&gt; {</span>
+const allAsync = <span class="fstat-no" title="function not covered" >(d</span>b, sql, params = <span class="branch-0 cbranch-no" title="branch not covered" >[])</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >  return new Promise(<span class="fstat-no" title="function not covered" >(r</span>esolve, reject) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    db.all(sql, params, <span class="fstat-no" title="function not covered" >(e</span>rr, rows) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      if (err) <span class="cstat-no" title="statement not covered" >reject(err);</span></span>
@@ -1043,7 +1043,7 @@ class AdminController {
   }
 }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >module.exports = new AdminController();</span>
+module.exports = new AdminController();
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -1051,7 +1051,7 @@ class AdminController {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-01T22:37:54.909Z
+                at 2026-02-01T22:42:26.868Z
             </div>
         <script src="../prettify.js"></script>
         <script>
