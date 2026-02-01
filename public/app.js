@@ -3,6 +3,33 @@ const API_URL = 'http://localhost:3001/api';
 let currentUser = null;
 let authToken = null;
 
+// ===== UTILITÁRIOS DE MÁSCARA E VALIDAÇÃO =====
+function maskCPF(value) {
+    return value.replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
+function maskPhone(value) {
+    return value.replace(/\D/g, '')
+        .replace(/^(\d{2})(\d)/, '($1) $2')
+        .replace(/(\d{5})(\d)/, '$1-$2')
+        .substring(0, 15);
+}
+
+function validateCPF(cpf) {
+    cpf = cpf.replace(/\D/g, '');
+    if (cpf.length !== 11 || /^([0-9])\1+$/.test(cpf)) return false;
+    const calc = (t) => {
+        let s = 0;
+        for (let i = 0; i < t; i++) s += parseInt(cpf.charAt(i)) * (t + 1 - i);
+        let d = 11 - (s % 11);
+        return d > 9 ? 0 : d;
+    };
+    return calc(9) === parseInt(cpf.charAt(9)) && calc(10) === parseInt(cpf.charAt(10));
+}
+
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
     // Restaurar token do localStorage
@@ -32,6 +59,19 @@ function setupEventListeners() {
     document.querySelectorAll('input[name="authMode"]').forEach(radio => {
         radio.addEventListener('change', toggleAuthFields);
     });
+
+    // Máscaras em campos do formulário
+    const cpfField = document.getElementById('cpf_cnpj');
+    if (cpfField) {
+        cpfField.addEventListener('input', (e) => {
+            e.target.value = maskCPF(e.target.value);
+        });
+    }
+
+    const phoneFields = document.querySelectorAll('input[type="tel"]');
+    phoneFields.forEach(f => f.addEventListener('input', (e) => {
+        e.target.value = maskPhone(e.target.value);
+    }));
 
     // Botões
     document.getElementById('btnLogin').addEventListener('click', () => showSection('auth'));
@@ -68,7 +108,13 @@ async function handleAuth(e) {
     if (mode === 'register') {
         credentials.name = document.getElementById('name').value;
         credentials.phone = document.getElementById('phone').value;
-        credentials.cpf_cnpj = document.getElementById('cpf_cnpj').value;
+        const rawCpf = document.getElementById('cpf_cnpj').value;
+        credentials.cpf_cnpj = rawCpf;
+        // Validar CPF simples antes de enviar
+        if (!validateCPF(rawCpf)) {
+            showAlert('CPF inválido. Verifique e tente novamente.', 'error');
+            return;
+        }
         credentials.address = document.getElementById('address').value;
         credentials.city = document.getElementById('city').value;
         credentials.state = document.getElementById('state').value;
@@ -297,27 +343,68 @@ async function loadUserBookings() {
             return;
         }
 
-        container.innerHTML = bookings.map(booking => `
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div>
-                        <h3>Agendamento #${booking.id}</h3>
-                        <p><strong>Serviço:</strong> ${booking.service_name}</p>
-                        <p><strong>Data:</strong> ${formatDate(booking.date)} às ${booking.time}</p>
-                        <p><strong>Local:</strong> ${booking.address}</p>
-                        <p><strong>Preço:</strong> R$ ${parseFloat(booking.final_price).toFixed(2)}</p>
-                    </div>
-                    <span class="status-badge status-${booking.status.toLowerCase()}">
-                        ${formatStatus(booking.status)}
-                    </span>
-                </div>
-                ${booking.status === 'completed' && !booking.rating ? `
-                    <button class="btn-primary" style="margin-top: 10px;" onclick="rateBooking(${booking.id})">
-                        Avaliar Serviço ⭐
-                    </button>
-                ` : ''}
-            </div>
-        `).join('');
+        // ✅ CORRIGIDO: XSS prevention — usar createElement em vez de innerHTML
+        container.innerHTML = '';
+        bookings.forEach(booking => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            const header = document.createElement('div');
+            header.style.display = 'flex';
+            header.style.justifyContent = 'space-between';
+            header.style.alignItems = 'start';
+            
+            const content = document.createElement('div');
+            const title = document.createElement('h3');
+            title.textContent = `Agendamento #${booking.id}`;
+            content.appendChild(title);
+            
+            const service = document.createElement('p');
+            const serviceBold = document.createElement('strong');
+            serviceBold.textContent = 'Serviço: ';
+            service.appendChild(serviceBold);
+            const serviceName = document.createElement('span');
+            serviceName.textContent = booking.service_name;
+            service.appendChild(serviceName);
+            content.appendChild(service);
+            
+            const date = document.createElement('p');
+            date.textContent = `Data: ${formatDate(booking.date)} às ${booking.time}`;
+            content.appendChild(date);
+            
+            const address = document.createElement('p');
+            const addressBold = document.createElement('strong');
+            addressBold.textContent = 'Local: ';
+            address.appendChild(addressBold);
+            const addressSpan = document.createElement('span');
+            addressSpan.textContent = booking.address;
+            address.appendChild(addressSpan);
+            content.appendChild(address);
+            
+            const price = document.createElement('p');
+            price.textContent = `Preço: R$ ${parseFloat(booking.final_price).toFixed(2)}`;
+            content.appendChild(price);
+            
+            header.appendChild(content);
+            
+            const badge = document.createElement('span');
+            badge.className = `status-badge status-${booking.status.toLowerCase()}`;
+            badge.textContent = formatStatus(booking.status);
+            header.appendChild(badge);
+            
+            card.appendChild(header);
+            
+            if (booking.status === 'completed' && !booking.rating) {
+                const btn = document.createElement('button');
+                btn.className = 'btn-primary';
+                btn.style.marginTop = '10px';
+                btn.textContent = 'Avaliar Serviço ⭐';
+                btn.addEventListener('click', () => rateBooking(booking.id));
+                card.appendChild(btn);
+            }
+            
+            container.appendChild(card);
+        });
     } catch (error) {
         showAlert('Erro ao carregar agendamentos', 'error');
         console.error(error);
@@ -340,42 +427,70 @@ async function loadLoyaltyInfo() {
 
         const progressPercent = (loyalty.five_star_streak / 10) * 100;
 
-        container.innerHTML = `
-            <div class="loyalty-badge">
-                🎁 ${loyalty.five_star_streak}/10 Avaliações 5⭐
-            </div>
-            
-            <div style="background: #f0f0f0; border-radius: 10px; padding: 20px;">
-                <p style="margin-bottom: 10px;">Progresso para bônus de R$ 100:</p>
-                <div style="background: white; border-radius: 5px; height: 30px; overflow: hidden;">
-                    <div style="background: linear-gradient(90deg, #667eea, #764ba2); height: 100%; width: ${progressPercent}%; transition: width 0.3s;"></div>
-                </div>
-                <p style="margin-top: 10px; color: #666; font-size: 14px;">
-                    ${loyalty.five_star_streak < 10 ? `Faltam ${10 - loyalty.five_star_streak} avaliações para ganhar R$ 100!` : '🎉 Você ganhou R$ 100!'}
-                </p>
-            </div>
-
-            ${loyalty.loyalty_bonus > 0 ? `
-                <div class="card" style="background: #fff3cd; border-left-color: #ffc107; margin-top: 20px;">
-                    <h3>💰 Bônus Disponível: R$ ${loyalty.loyalty_bonus.toFixed(2)}</h3>
-                    <p>Este desconto será aplicado automaticamente no seu próximo agendamento!</p>
-                </div>
-            ` : ''}
-
-            <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">Como Funciona?</h3>
-            <div class="card">
-                <p>✅ Cada serviço bem avaliado com 5⭐ adiciona 1 ponto ao seu streak</p>
-            </div>
-            <div class="card">
-                <p>🎁 Ao atingir 10 avaliações 5⭐ seguidas, você ganha R$ 100 de bônus!</p>
-            </div>
-            <div class="card">
-                <p>💳 O bônus é aplicado automaticamente no seu próximo agendamento</p>
-            </div>
-            <div class="card">
-                <p>🔄 Após usar o bônus, seu streak reseta e você pode ganhar outro!</p>
-            </div>
-        `;
+        // ✅ CORRIGIDO: Construir DOM com createElement (seguro contra XSS)
+        container.innerHTML = '';
+        
+        const badge = document.createElement('div');
+        badge.className = 'loyalty-badge';
+        badge.textContent = `🎁 ${loyalty.five_star_streak}/10 Avaliações 5⭐`;
+        container.appendChild(badge);
+        
+        const progress = document.createElement('div');
+        progress.style.cssText = 'background: #f0f0f0; border-radius: 10px; padding: 20px;';
+        
+        const label = document.createElement('p');
+        label.style.marginBottom = '10px';
+        label.textContent = 'Progresso para bônus de R$ 100:';
+        progress.appendChild(label);
+        
+        const progressBar = document.createElement('div');
+        progressBar.style.cssText = 'background: white; border-radius: 5px; height: 30px; overflow: hidden;';
+        const fill = document.createElement('div');
+        fill.style.cssText = `background: linear-gradient(90deg, var(--color-primary), var(--color-primary-600)); height: 100%; width: ${progressPercent}%; transition: width 0.3s;`;
+        progressBar.appendChild(fill);
+        progress.appendChild(progressBar);
+        
+        const status = document.createElement('p');
+        status.style.cssText = 'margin-top: 10px; color: #666; font-size: 14px;';
+        status.textContent = loyalty.five_star_streak < 10 
+            ? `Faltam ${10 - loyalty.five_star_streak} avaliações para ganhar R$ 100!`
+            : '🎉 Você ganhou R$ 100!';
+        progress.appendChild(status);
+        container.appendChild(progress);
+        
+        if (loyalty.loyalty_bonus > 0) {
+            const bonusDiv = document.createElement('div');
+            bonusDiv.className = 'card';
+            bonusDiv.style.cssText = 'background: #fff3cd; border-left-color: #ffc107; margin-top: 20px;';
+            const bonusH3 = document.createElement('h3');
+            bonusH3.textContent = `💰 Bônus Disponível: R$ ${loyalty.loyalty_bonus.toFixed(2)}`;
+            const bonusP = document.createElement('p');
+            bonusP.textContent = 'Este desconto será aplicado automaticamente no seu próximo agendamento!';
+            bonusDiv.appendChild(bonusH3);
+            bonusDiv.appendChild(bonusP);
+            container.appendChild(bonusDiv);
+        }
+        
+        const title = document.createElement('h3');
+        title.style.cssText = 'color: var(--color-primary); margin-top: 30px; margin-bottom: 15px;';
+        title.textContent = 'Como Funciona?';
+        container.appendChild(title);
+        
+        const tips = [
+            '✅ Cada serviço bem avaliado com 5⭐ adiciona 1 ponto ao seu streak',
+            '🎁 Ao atingir 10 avaliações 5⭐ seguidas, você ganha R$ 100 de bônus!',
+            '💳 O bônus é aplicado automaticamente no seu próximo agendamento',
+            '🔄 Após usar o bônus, seu streak reseta e você pode ganhar outro!'
+        ];
+        
+        tips.forEach(tip => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const p = document.createElement('p');
+            p.textContent = tip;
+            card.appendChild(p);
+            container.appendChild(card);
+        });
     } catch (error) {
         console.error(error);
     }

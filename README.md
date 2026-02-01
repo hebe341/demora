@@ -1,6 +1,6 @@
 # 🧹 Leidy Cleaner - Plataforma de Limpeza Autônoma
 
-**Status: 🟢 PRONTO PARA PRODUÇÃO (83% COMPLETO)**
+**Status: 🟢 Trabalho em progresso — melhorias de UX, segurança e CI implementadas**
 
 Plataforma completa de agendamento de limpeza com segurança, validações e integrações prontas para produção.
 
@@ -71,6 +71,22 @@ Instruções rápidas:
 cd frontend && npm install
 cd ../backend && npm install
 ```
+
+## 🔧 O que foi implementado agora
+
+- Identidade visual renovada (tema verde, tipografia e melhorias CSS) — `public/index.html`
+- Validação e máscara de CPF/telefone no frontend — `public/app.js`
+- CSRF protection + CSP/HSTS no backend — `backend/src/middleware/csrf.js`, `backend/src/index.js`
+- Logger com mascaramento de PII — `backend/src/utils/logger.js`
+- Pipeline CI básico (GitHub Actions) — `.github/workflows/ci.yml`
+- Google Analytics placeholder adicionado ao frontend (substitua o Measurement ID)
+
+## ✅ Próximos passos recomendados
+
+1. Otimizar imagens para WebP e configurar CDN
+2. Implementar testes E2E para fluxo de agendamento
+3. Configurar deploy automático (Vercel para frontend, Railway para backend)
+
 
 2. Rodar com Docker Compose:
 

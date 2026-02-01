@@ -18,35 +18,75 @@ const Scheduler = require('./utils/scheduler');
 const ChatService = require('./services/ChatService');
 const logger = require('./utils/logger');
 const path = require('path');
+const { initCsrf } = require('./middleware/csrf');
 
 const app = express();
 app.set('trust proxy', true);
 const server = http.createServer(app);
+
+// ✅ CORRIGIDO: Socket.io CORS whitelist (não aberto para "*")
+const socketCorsOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000,http://localhost:3001')
+  .split(',')
+  .map(origin => origin.trim());
+
 const io = socketIO(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
+    origin: socketCorsOrigins,
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
 // ===== CHAT SERVICE =====
 const chatService = new ChatService(io);
 
-// ===== MIDDLEWARE =====
-// Segurança com Helmet
-app.use(helmet());
+// Inicializar CSRF (gera cookie XSRF-TOKEN em GETs e valida POSTs)
+initCsrf(app);
 
-// Rate limiting
+// ===== MIDDLEWARE =====
+// Segurança com Helmet (CSP + HSTS explícitos)
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", 'https://www.googletagmanager.com', 'https://www.google-analytics.com'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc: ['https://fonts.gstatic.com'],
+      imgSrc: ["'self'", 'data:', 'https://www.google-analytics.com'],
+      connectSrc: ["'self'", 'https://www.google-analytics.com', 'http://localhost:3001'],
+      objectSrc: ["'none'"],
+      frameAncestors: ["'none'"]
+    }
+  }
+}));
+
+// HSTS para forçar HTTPS em produção
+if (process.env.NODE_ENV === 'production') {
+  app.use(helmet.hsts({ maxAge: 31536000, includeSubDomains: true }));
+}
+
+// ✅ CORRIGIDO: Rate limiting - Global + Específicos por rota
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // Limite 100 requisições por IP
   message: 'Muitas requisições deste IP, tente novamente mais tarde',
-  standardHeaders: true, // Retorna informações de rate-limit nos headers
-  legacyHeaders: false, // Desabilita X-RateLimit-* headers
-  skip: (req) => {
-    // Não aplicar rate limit em rotas de health check
-    return req.path === '/health';
-  }
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => req.path === '/health'
+});
+
+// ✅ CORRIGIDO: Limites mais rigorosos para rotas sensíveis
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5, // Máximo 5 tentativas de login/signup em 15 min
+  message: 'Muitas tentativas de acesso. Tente novamente em 15 minutos.',
+  skipSuccessfulRequests: true // Reseta contador se sucesso
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minuto
+  max: 30, // 30 requisições por minuto
+  message: 'Limite de requisições API excedido'
 });
 
 // Aplicar rate limit globalmente
@@ -69,6 +109,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '..', '..', 'public')));
 
 // ===== ROUTES =====
+// ✅ CORRIGIDO: Aplicar rate limiters específicos nas rotas sensíveis
+app.use('/api/auth', authLimiter);  // Limiter rigoroso para autenticação
+app.use('/api', apiLimiter);        // Limiter padrão para API geral
 app.use('/api', apiRoutes);
 app.use('/webhooks', webhookRoutes);
 app.use('/admin', adminRoutes);

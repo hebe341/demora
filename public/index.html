@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leidy Cleaner - Serviços de Limpeza</title>
+    <meta name="description" content="Leidy Cleaner - Agende serviços de limpeza com profissionais de confiança. Fácil, rápido e seguro.">
+    <meta name="theme-color" content="#0f9d58">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Leidy Cleaner - Serviços de Limpeza">
+    <meta property="og:description" content="Contrate serviços de limpeza com profissionais verificados.">
+    <meta property="og:type" content="website">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <!-- Google Analytics (substitua G-XXXXXXX pelo seu Measurement ID) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);} 
+            gtag('js', new Date());
+            gtag('config', 'G-XXXXXXX');
+        </script>
     <style>
         * {
             margin: 0;
@@ -11,11 +29,25 @@
             box-sizing: border-box;
         }
 
+        :root{
+            --color-primary: #0f9d58; /* verde Brasil */
+            --color-primary-600: #0b7a43;
+            --color-accent: #0a5e37;
+            --color-bg: #f6fbf7;
+            --muted: #6b7280;
+            --card-bg: #ffffff;
+            --radius: 10px;
+            --max-width: 1200px;
+            --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: var(--font-sans);
+            background: linear-gradient(180deg, var(--color-bg) 0%, #f0f7f1 100%);
             min-height: 100vh;
-            color: #333;
+            color: #0f1724;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
@@ -25,19 +57,19 @@
         }
 
         header {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: transparent;
+            padding: 18px 0;
+            margin-bottom: 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         header h1 {
-            color: #667eea;
+            color: var(--color-primary);
             font-size: 28px;
+            letter-spacing: -0.5px;
+            font-weight: 700;
         }
 
         .header-buttons {
@@ -56,14 +88,15 @@
         }
 
         .btn-primary {
-            background: #667eea;
+            background: var(--color-primary);
             color: white;
+            box-shadow: 0 6px 18px rgba(15,157,88,0.18);
         }
 
         .btn-primary:hover {
-            background: #5568d3;
+            background: var(--color-primary-600);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 30px rgba(11,122,67,0.18);
         }
 
         .btn-secondary {
@@ -91,17 +124,18 @@
         }
 
         .sidebar {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
+            background: var(--card-bg);
+            padding: 18px;
+            border-radius: var(--radius);
             height: fit-content;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(16,24,40,0.04);
         }
 
         .sidebar h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 18px;
+            color: var(--color-primary);
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: 600;
         }
 
         .nav-item {
@@ -125,10 +159,10 @@
         }
 
         .content-area {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            padding: 28px;
+            border-radius: var(--radius);
+            box-shadow: 0 6px 24px rgba(16,24,40,0.04);
         }
 
         .section {
@@ -140,10 +174,11 @@
         }
 
         h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
+            color: var(--color-primary);
+            margin-bottom: 18px;
+            border-bottom: 2px solid rgba(15,157,88,0.08);
+            padding-bottom: 8px;
+            font-weight: 700;
         }
 
         form {
@@ -159,10 +194,11 @@
 
         input, textarea, select {
             padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
+            border: 1px solid #e6eef0;
+            border-radius: 8px;
+            font-size: 15px;
             font-family: inherit;
+            background: #fbfdfb;
         }
 
         input:focus, textarea:focus, select:focus {
@@ -216,11 +252,11 @@
         }
 
         .price-calculator {
-            background: #f8f9ff;
+            background: linear-gradient(90deg, rgba(15,157,88,0.03), rgba(15,157,88,0.01));
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid var(--color-primary);
         }
 
         .price-item {
@@ -246,11 +282,11 @@
         }
 
         .card {
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
-            border-left: 4px solid #667eea;
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 10px;
+            margin: 12px 0;
+            border-left: 4px solid rgba(15,157,88,0.06);
         }
 
         .card h3 {
@@ -333,7 +369,7 @@
         .loading {
             text-align: center;
             padding: 40px;
-            color: #667eea;
+            color: var(--color-primary);
         }
 
         .spinner {
@@ -369,12 +405,12 @@
         }
 
         .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            width: 96%;
+            max-width: 540px;
+            box-shadow: 0 20px 50px rgba(16,24,40,0.12);
         }
 
         .modal-header {
@@ -407,7 +443,8 @@
 
             header {
                 flex-direction: column;
-                gap: 15px;
+                gap: 12px;
+                align-items: flex-start;
             }
 
             .form-group {
@@ -419,6 +456,53 @@
                 gap: 10px;
             }
         }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+
+            header h1 {
+                font-size: 22px;
+            }
+
+            header {
+                margin-bottom: 16px;
+            }
+
+            button {
+                padding: 10px 16px;
+                font-size: 13px;
+                min-height: 44px;
+            }
+
+            .sidebar {
+                margin-bottom: 16px;
+            }
+
+            .nav-item {
+                padding: 12px;
+                font-size: 13px;
+            }
+
+            .content-area {
+                padding: 16px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            input, textarea, select {
+                font-size: 16px;
+                padding: 10px;
+            }
+
+            .modal-content {
+                width: 98%;
+                padding: 16px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -426,12 +510,12 @@
         <!-- HEADER -->
         <header>
             <div>
-                <h1>✨ Leidy Cleaner</h1>
-                <p style="color: #999; font-size: 14px;">Serviços de Limpeza Professional</p>
+                <h1 aria-label="Leidy Cleaner">✨ Leidy Cleaner</h1>
+                <p style="color: var(--muted); font-size: 14px;">Serviços de Limpeza Profissional</p>
             </div>
-            <div class="header-buttons">
+            <div class="header-buttons" role="navigation" aria-label="Ações de usuário">
                 <button class="btn-secondary" id="btnLogout" style="display: none;">Sair</button>
-                <button class="btn-primary" id="btnLogin">Login</button>
+                <button class="btn-primary" id="btnLogin" aria-haspopup="dialog">Login</button>
             </div>
         </header>
 
@@ -455,7 +539,7 @@
                 <!-- HOME -->
                 <div class="section active" id="home">
                     <h2>Bem-vindo ao Leidy Cleaner</h2>
-                    <p>A plataforma mais fácil para contratar serviços de limpeza professional.</p>
+                    <p>Contrate serviços de limpeza com profissionais de confiança — rápido, seguro e com preços justos.</p>
                     
                     <div style="margin-top: 30px;">
                         <h3 style="color: #667eea; margin-bottom: 20px;">Como funciona?</h3>
@@ -506,7 +590,7 @@
                         </p>
                     </div>
 
-                    <button class="btn-primary" id="btnComeceLogo" style="margin-top: 30px; width: 100%; padding: 15px;">
+                    <button class="btn-primary" id="btnComeceLogo" style="margin-top: 30px; width: 100%; padding: 15px;" aria-label="Comece agora - Agendar serviço">
                         Comece Agora →
                     </button>
                 </div>
@@ -525,20 +609,20 @@
                         </div>
 
                         <div id="loginFields">
-                            <input type="email" placeholder="Email" id="email" required>
-                            <input type="password" placeholder="Senha" id="password" required>
+                            <input type="email" placeholder="Email" id="email" required aria-label="Email">
+                            <input type="password" placeholder="Senha" id="password" required aria-label="Senha">
                         </div>
 
                         <div id="registerFields" style="display: none;">
-                            <input type="text" placeholder="Nome Completo" id="name">
-                            <input type="email" placeholder="Email" id="regEmail">
-                            <input type="password" placeholder="Senha" id="regPassword">
-                            <input type="tel" placeholder="Telefone (11987654321)" id="phone">
-                            <input type="text" placeholder="CPF/CNPJ" id="cpf_cnpj">
-                            <input type="text" placeholder="Endereço" id="address">
-                            <input type="text" placeholder="Cidade" id="city">
-                            <input type="text" placeholder="Estado (SP)" id="state">
-                            <input type="text" placeholder="CEP" id="zip_code">
+                            <input type="text" placeholder="Nome Completo" id="name" aria-label="Nome Completo">
+                            <input type="email" placeholder="Email" id="regEmail" aria-label="Email">
+                            <input type="password" placeholder="Senha" id="regPassword" aria-label="Senha para registro">
+                            <input type="tel" placeholder="Telefone (11987654321)" id="phone" aria-label="Telefone">
+                            <input type="text" placeholder="CPF/CNPJ" id="cpf_cnpj" aria-label="CPF ou CNPJ">
+                            <input type="text" placeholder="Endereço" id="address" aria-label="Endereço">
+                            <input type="text" placeholder="Cidade" id="city" aria-label="Cidade">
+                            <input type="text" placeholder="Estado (SP)" id="state" aria-label="Estado">
+                            <input type="text" placeholder="CEP" id="zip_code" aria-label="CEP">
                         </div>
 
                         <div class="form-buttons">
@@ -553,8 +637,8 @@
                     <h2>📅 Agendar Serviço</h2>
                     <form id="bookingForm">
                         <div class="form-group">
-                            <label for="service">Serviço:</label>
-                            <select id="service" required>
+                            <label for="service" id="serviceLabel">Serviço:</label>
+                            <select id="service" required aria-labelledby="serviceLabel">
                                 <option value="">Selecione um serviço</option>
                                 <option value="1">Limpeza Residencial</option>
                                 <option value="2">Limpeza Comercial</option>
@@ -563,15 +647,15 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="bookingDate">Data:</label>
-                            <input type="date" id="bookingDate" required>
-                            <label for="bookingTime">Horário:</label>
-                            <input type="time" id="bookingTime" required>
+                            <label for="bookingDate" id="dateLabel">Data:</label>
+                            <input type="date" id="bookingDate" required aria-labelledby="dateLabel">
+                            <label for="bookingTime" id="timeLabel">Horário:</label>
+                            <input type="time" id="bookingTime" required aria-labelledby="timeLabel">
                         </div>
 
                         <div class="form-group">
-                            <label for="duration">Duração (horas):</label>
-                            <select id="duration" required>
+                            <label for="duration" id="durationLabel">Duração (horas):</label>
+                            <select id="duration" required aria-labelledby="durationLabel">
                                 <option value="1">1 hora - R$ 40,00</option>
                                 <option value="2">2 horas - R$ 60,00</option>
                                 <option value="3">3 horas - R$ 80,00</option>
@@ -580,32 +664,33 @@
                             </select>
                         </div>
 
-                        <label>Opções Adicionais:</label>
-                        <div class="checkbox-group">
+                        <label role="heading" aria-level="3">Opções Adicionais:</label>
+                        <div class="checkbox-group" role="group" aria-labelledby="optionsLabel">
+                            <label id="optionsLabel" style="display: none;">Opções adicionais de serviço</label>
                             <label>
-                                <input type="checkbox" id="hasStaff"> Com Funcionária (+40%)
+                                <input type="checkbox" id="hasStaff" aria-label="Adicionar funcionária (+40%)"> Com Funcionária (+40%)
                             </label>
                             <label>
-                                <input type="checkbox" id="hasQuarter"> Quarto do Trabalho (+25%)
+                                <input type="checkbox" id="hasQuarter" aria-label="Quarto do trabalho (+25%)"> Quarto do Trabalho (+25%)
                             </label>
                             <label>
-                                <input type="checkbox" id="isPostWork"> Pós-Obra (×1.5)
+                                <input type="checkbox" id="isPostWork" aria-label="Pós-obra (multiplicador 1.5x)"> Pós-Obra (×1.5)
                             </label>
                         </div>
 
                         <div class="form-group full">
-                            <label for="address">Endereço:</label>
-                            <input type="text" id="address" required placeholder="Rua, número, bairro">
+                            <label for="address" id="addrLabel">Endereço:</label>
+                            <input type="text" id="address" required placeholder="Rua, número, bairro" aria-labelledby="addrLabel">
                         </div>
 
                         <div class="form-group full">
-                            <label for="phone">Telefone:</label>
-                            <input type="tel" id="phone" required placeholder="(11) 98765-4321">
+                            <label for="phone" id="phoneLabel">Telefone:</label>
+                            <input type="tel" id="phone" required placeholder="(11) 98765-4321" aria-labelledby="phoneLabel">
                         </div>
 
                         <div class="form-group full">
-                            <label for="notes">Observações:</label>
-                            <textarea id="notes" placeholder="Informações adicionais..."></textarea>
+                            <label for="notes" id="notesLabel">Observações:</label>
+                            <textarea id="notes" placeholder="Informações adicionais..." aria-labelledby="notesLabel"></textarea>
                         </div>
 
                         <div class="price-calculator">
@@ -691,6 +776,6 @@
         </div>
     </div>
 
-    <script src="./app.js"></script>
+    <script src="./app.js" defer></script>
 </body>
 </html>

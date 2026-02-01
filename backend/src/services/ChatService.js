@@ -4,6 +4,8 @@
  */
 
 const db = require('../db');
+const sanitizeHtml = require('sanitize-html');
+const logger = require('../utils/logger');
 
 class ChatService {
   constructor(io) {
@@ -13,7 +15,7 @@ class ChatService {
 
   setupListeners() {
     this.io.on('connection', (socket) => {
-      console.log(`👤 Usuário conectado: ${socket.id}`);
+      logger.info(`👤 Usuário conectado: ${socket.id}`);
 
       // Entrar em sala de chat
       socket.on('join-booking', async (data) => {
@@ -21,7 +23,7 @@ class ChatService {
         const roomName = `booking-${bookingId}`;
 
         socket.join(roomName);
-        console.log(`✅ ${userRole} entrou em ${roomName}`);
+        logger.info(`✅ ${userRole} entrou em ${roomName}`);
 
         // Enviar histórico de mensagens
         try {
@@ -33,12 +35,21 @@ class ChatService {
           `;
           const history = await db.query(historyQuery, [bookingId]);
 
+          // ✅ CORRIGIDO: Sanitizar mensagens do histórico para XSS
+          const sanitizedMessages = history.rows.map(msg => ({
+            ...msg,
+            message: sanitizeHtml(msg.message, {
+              allowedTags: ['b', 'i', 'em', 'strong', 'p', 'br'],
+              allowedAttributes: {}
+            })
+          }));
+
           socket.emit('chat-history', {
-            messages: history.rows,
+            messages: sanitizedMessages,
             bookingId
           });
         } catch (error) {
-          console.error('Erro ao buscar histórico de chat:', error);
+          logger.error('Erro ao buscar histórico de chat:', error);
         }
 
         // Notificar que alguém entrou
@@ -55,33 +66,39 @@ class ChatService {
         const roomName = `booking-${bookingId}`;
 
         try {
+          // ✅ CORRIGIDO: Sanitizar mensagem para XSS
+          const sanitizedMessage = sanitizeHtml(message, {
+            allowedTags: ['b', 'i', 'em', 'strong', 'p', 'br'],
+            allowedAttributes: {}
+          });
+
           // Salvar no banco
           const insertQuery = `
             INSERT INTO chat_messages (booking_id, user_id, user_role, message, created_at)
             VALUES ($1, $2, $3, $4, NOW())
             RETURNING *
           `;
-          const result = await db.query(insertQuery, [bookingId, userId, userRole, message]);
+          const result = await db.query(insertQuery, [bookingId, userId, userRole, sanitizedMessage]);
 
           // Enviar para a sala
           this.io.to(roomName).emit('new-message', {
             id: result.rows[0].id,
             userId,
             userRole,
-            message,
+            message: sanitizedMessage,
             createdAt: result.rows[0].created_at
           });
 
-          console.log(`💬 Mensagem em ${roomName}: ${message.substring(0, 30)}...`);
+          logger.info(`💬 Mensagem em ${roomName}: ${sanitizedMessage.substring(0, 30)}...`);
         } catch (error) {
-          console.error('Erro ao salvar mensagem:', error);
+          logger.error('Erro ao salvar mensagem:', error);
           socket.emit('message-error', { error: 'Erro ao enviar mensagem' });
         }
       });
 
       // Desconectar
       socket.on('disconnect', () => {
-        console.log(`❌ Usuário desconectado: ${socket.id}`);
+        logger.info(`❌ Usuário desconectado: ${socket.id}`);
       });
 
       // Deixar sala

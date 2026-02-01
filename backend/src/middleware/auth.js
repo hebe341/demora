@@ -4,12 +4,25 @@
  */
 
 const jwt = require('jsonwebtoken');
+const logger = require('../utils/logger');
+
+// ✅ VALIDAR secrets na inicialização
+if (!process.env.JWT_SECRET || !process.env.JWT_REFRESH_SECRET) {
+  logger.error('❌ JWT_SECRET ou JWT_REFRESH_SECRET não definidos em .env');
+  process.exit(1);
+}
+
+// ✅ VALIDAR tamanho mínimo de secrets (deve ser >= 32 caracteres)
+if (process.env.JWT_SECRET.length < 32 || process.env.JWT_REFRESH_SECRET.length < 32) {
+  logger.error('❌ JWT_SECRET e JWT_REFRESH_SECRET devem ter mínimo 32 caracteres (atualmente: JWT_SECRET=' + process.env.JWT_SECRET.length + ', JWT_REFRESH_SECRET=' + process.env.JWT_REFRESH_SECRET.length + ')');
+  process.exit(1);
+}
 
 // ✅ CORRIGIDO: Gerar token com expiração
 const generateToken = (userId, role = 'customer') => {
   return jwt.sign(
     { userId, role },
-    process.env.JWT_SECRET || 'seu-secret-key-aqui',
+    process.env.JWT_SECRET,
     { expiresIn: '24h' } // ✅ CORRIGIDO: Token expira em 24h
   );
 };
@@ -18,7 +31,7 @@ const generateToken = (userId, role = 'customer') => {
 const generateRefreshToken = (userId) => {
   return jwt.sign(
     { userId },
-    process.env.JWT_REFRESH_SECRET || 'seu-refresh-secret-key',
+    process.env.JWT_REFRESH_SECRET,
     { expiresIn: '7d' } // ✅ CORRIGIDO: Refresh expira em 7d
   );
 };
@@ -35,7 +48,7 @@ const authenticateToken = (req, res, next) => {
     // ✅ CORRIGIDO: Verificar token com JWT real
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET || 'seu-secret-key-aqui'
+      process.env.JWT_SECRET
     );
     req.user = decoded;
     next();

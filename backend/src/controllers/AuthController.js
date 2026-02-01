@@ -5,6 +5,13 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const db = require('../db');
+const logger = require('../utils/logger');
+
+// ✅ VALIDAR secrets na inicialização
+if (!process.env.JWT_SECRET || !process.env.JWT_REFRESH_SECRET) {
+  logger.error('❌ JWT_SECRET ou JWT_REFRESH_SECRET não definidos em .env');
+  process.exit(1);
+}
 
 class AuthController {
   /**
@@ -119,13 +126,13 @@ class AuthController {
           role,
           name
         },
-        process.env.JWT_SECRET || 'sua_chave_secreta_super_segura_123',
+        process.env.JWT_SECRET,
         { expiresIn: '24h' }
       );
 
       const refreshToken = jwt.sign(
         { id: userId, email },
-        process.env.JWT_SECRET || 'sua_chave_secreta_super_segura_123',
+        process.env.JWT_REFRESH_SECRET,
         { expiresIn: '7d' }
       );
 
@@ -200,13 +207,13 @@ class AuthController {
           role: user.role,
           name: user.name
         },
-        process.env.JWT_SECRET || 'sua_chave_secreta_super_segura_123',
+        process.env.JWT_SECRET,
         { expiresIn: '24h' }
       );
 
       const refreshToken = jwt.sign(
         { id: user.id, email: user.email },
-        process.env.JWT_SECRET || 'sua_chave_secreta_super_segura_123',
+        process.env.JWT_REFRESH_SECRET,
         { expiresIn: '7d' }
       );
 
@@ -324,7 +331,7 @@ class AuthController {
 
       const decoded = jwt.verify(
         refreshToken,
-        process.env.JWT_SECRET || 'sua_chave_secreta_super_segura_123'
+        process.env.JWT_REFRESH_SECRET
       );
 
       const user = await db.get('SELECT * FROM users WHERE id = ?', decoded.id);
@@ -342,7 +349,7 @@ class AuthController {
           role: user.role,
           name: user.name
         },
-        process.env.JWT_SECRET || 'sua_chave_secreta_super_segura_123',
+        process.env.JWT_SECRET,
         { expiresIn: '24h' }
       );
 
