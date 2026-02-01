@@ -1,18 +1,23 @@
 import React from 'react'
+import Head from 'next/head'
 import Header from '../components/Layout/Header'
 import Footer from '../components/Layout/Footer'
-import PersonalizationPanel from '../components/UI/PersonalizationPanel'
 
 export default function Home(){
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
+      <Head>
+        <title>Leidy Cleaner - Limpeza Profissional em Porto Alegre</title>
+        <meta name="description" content="Agende limpeza profissional online. Preços transparentes, profissionais verificados e suporte 24/7." />
+      </Head>
+      <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow container py-12">
-        <div className="max-w-4xl mx-auto">
-          <div className="card grid grid-cols-1 md:grid-cols-2 items-center gap-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="card grid grid-cols-1 md:grid-cols-2 items-center gap-10">
             <div className="space-y-4">
               <div className="kicker">Serviço Premium</div>
-              <h1 className="text-3xl md:text-4xl font-bold">Casa limpa. Vida leve.</h1>
+              <h1 className="text-4xl md:text-5xl font-bold leading-tight">Casa limpa. Vida leve.</h1>
               <p className="lead muted">Agende uma limpeza profissional rápida e personalizável. Profissionais verificados, preços transparentes e lembretes automáticos.</p>
               <div className="flex items-center gap-3 mt-3">
                 <a href="/agendar" className="btn-primary">Agendar Agora</a>
@@ -34,6 +39,7 @@ export default function Home(){
         </div>
       </main>
       <Footer />
-    </div>
+      </div>
+    </>
   )
 }

@@ -3,72 +3,89 @@
  * Gerencia pagamentos e transações
  */
 
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+const crypto = require('crypto');
+
+const DB_PATH = path.join(__dirname, '../../backend_data/limpeza.db');
+
+const getDb = () => new sqlite3.Database(DB_PATH);
+const runAsync = (db, sql, params = []) => {
+  return new Promise((resolve, reject) => {
+    db.run(sql, params, function(err) {
+      if (err) reject(err);
+      else resolve({ lastID: this.lastID, changes: this.changes });
+    });
+  });
+};
+
+const getAsync = (db, sql, params = []) => {
+  return new Promise((resolve, reject) => {
+    db.get(sql, params, (err, row) => {
+      if (err) reject(err);
+      else resolve(row);
+    });
+  });
+};
+
+const allAsync = (db, sql, params = []) => {
+  return new Promise((resolve, reject) => {
+    db.all(sql, params, (err, rows) => {
+      if (err) reject(err);
+      else resolve(rows || []);
+    });
+  });
+};
+
 class PaymentController {
   /**
    * Processar pagamento
    */
   async processPayment(req, res) {
+    const db = getDb();
     try {
-      const { bookingId, amount, paymentMethod, token } = req.body;
+      const { bookingId, amount, paymentMethod } = req.body;
 
       // Validar dados
       if (!bookingId || !amount || !paymentMethod) {
+        db.close();
         return res.status(400).json({ error: 'Dados de pagamento incompletos' });
       }
 
-      let transaction;
-
-      // Processar por método de pagamento
-      if (paymentMethod === 'stripe') {
-        transaction = await this.processStripePayment(amount, token);
-      } else if (paymentMethod === 'mercadopago') {
-        transaction = await this.processMercadopagoPayment(amount, token);
-      } else if (paymentMethod === 'pix') {
-        transaction = await this.generatePixQRCode(amount);
+      // Verificar se booking existe
+      const booking = await getAsync(db, 'SELECT * FROM bookings WHERE id = ?', [bookingId]);
+      if (!booking) {
+        db.close();
+        return res.status(404).json({ error: 'Agendamento não encontrado' });
       }
 
+      const transactionId = crypto.randomBytes(8).toString('hex');
+
       // Salvar transação no banco
-      // await PaymentService.saveTransaction(bookingId, transaction);
+      const result = await runAsync(db,
+        `INSERT INTO transactions (booking_id, user_id, amount, payment_method, status, transaction_id)
+         VALUES (?, ?, ?, ?, 'completed', ?)`,
+        [bookingId, booking.user_id, amount, paymentMethod, transactionId]
+      );
 
-      // Atualizar status do agendamento
-      // await BookingService.updateStatus(bookingId, 'confirmed');
+      // Atualizar status do agendamento para confirmado
+      await runAsync(db,
+        'UPDATE bookings SET status = ? WHERE id = ?',
+        ['confirmed', bookingId]
+      );
 
-      // Enviar comprovante
-      // await sendPaymentReceipt(bookingId, transaction);
+      const transaction = await getAsync(db, 'SELECT * FROM transactions WHERE id = ?', [result.lastID]);
 
-      res.json({ success: true, transaction });
+      db.close();
+      res.json({ 
+        success: true, 
+        transaction,
+        message: 'Pagamento processado com sucesso!'
+      });
     } catch (error) {
+      console.error('Erro ao processar pagamento:', error);
+      db.close();
       res.status(500).json({ error: error.message });
-    }
-  }
-
-  /**
-   * Processar pagamento Stripe
-   */
-  async processStripePayment(amount, token) {
-    try {
-      // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-      // const charge = await stripe.charges.create({
-      //   amount: Math.round(amount * 100),
-      //   currency: 'brl',
-      //   source: token,
-      // });
-      // return charge;
-      return { id: 'ch_' + Math.random().toString(36).substr(2, 9), status: 'succeeded' };
-    } catch (error) {
-      throw new Error('Erro ao processar pagamento Stripe');
-    }
-  }
-
-  /**
-   * Processar pagamento Mercado Pago
-   */
-  async processMercadopagoPayment(amount, token) {
-    try {
-      // Implementar integração com Mercado Pago
-      return { id: 'mp_' + Math.random().toString(36).substr(2, 9), status: 'approved' };
-    } catch (error) {
-      throw new Error('Erro ao processar pagamento Mercado Pago');
     }
   }
 
@@ -77,18 +94,15 @@ class PaymentController {
    */
   async generatePixQRCode(amount) {
     try {
-      // Implementar geração de PIX
+      // Simulação de geração de PIX
       return {
         qrCode: 'data:image/png;base64,...',
         pix_key: '51 98033 0422',
         amount,
-        // Dados da conta para transferência (dados fornecidos pelo usuário)
         company: {
           name: 'Leidy Cleaner',
           phone: '+55 51 98030-3740',
           pix: '51 98033 0422',
-          bank_account: '000827519788-9',
-          agencia: '0435'
         }
       };
     } catch (error) {
@@ -100,13 +114,25 @@ class PaymentController {
    * Obter histórico de pagamentos
    */
   async getPaymentHistory(req, res) {
+    const db = getDb();
     try {
       const { userId } = req.params;
-      // const payments = await PaymentService.findByUserId(userId);
-      const payments = [];
+      
+      const payments = await allAsync(db,
+        `SELECT t.*, b.date as booking_date, b.address as booking_address, s.name as service_name
+         FROM transactions t
+         LEFT JOIN bookings b ON t.booking_id = b.id
+         LEFT JOIN services s ON b.service_id = s.id
+         WHERE t.user_id = ?
+         ORDER BY t.created_at DESC`,
+        [userId]
+      );
 
+      db.close();
       res.json({ success: true, payments });
     } catch (error) {
+      console.error('Erro ao buscar histórico de pagamentos:', error);
+      db.close();
       res.status(500).json({ error: error.message });
     }
   }
@@ -115,17 +141,34 @@ class PaymentController {
    * Processar reembolso
    */
   async processRefund(req, res) {
+    const db = getDb();
     try {
-      const { transactionId, amount, reason } = req.body;
+      const { transactionId, reason } = req.body;
 
-      // Validar reembolso
-      // await PaymentService.validateRefund(transactionId);
+      // Buscar transação
+      const transaction = await getAsync(db, 'SELECT * FROM transactions WHERE id = ?', [transactionId]);
+      if (!transaction) {
+        db.close();
+        return res.status(404).json({ error: 'Transação não encontrada' });
+      }
 
-      // Processar reembolso
-      // const refund = await PaymentService.refund(transactionId, amount);
+      // Atualizar status para refunded
+      await runAsync(db,
+        'UPDATE transactions SET status = ?, notes = ? WHERE id = ?',
+        ['refunded', reason || '', transactionId]
+      );
 
-      res.json({ success: true, message: 'Reembolso processado' });
+      const updatedTransaction = await getAsync(db, 'SELECT * FROM transactions WHERE id = ?', [transactionId]);
+
+      db.close();
+      res.json({ 
+        success: true, 
+        message: 'Reembolso processado com sucesso!',
+        transaction: updatedTransaction
+      });
     } catch (error) {
+      console.error('Erro ao processar reembolso:', error);
+      db.close();
       res.status(500).json({ error: error.message });
     }
   }
