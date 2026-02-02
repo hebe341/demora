@@ -1,10 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 import Header from '../components/Layout/Header'
 import Footer from '../components/Layout/Footer'
 
 export default function Home() {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      offset: 100,
+      once: true,
+      easing: 'ease-out-cubic'
+    })
+  }, [])
+
   const testimonials = [
     {
       name: 'Maria Silva',
@@ -143,7 +154,7 @@ export default function Home() {
           {/* Services Section */}
           <section className="py-20 sm:py-32">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-center mb-16">
+              <div className="text-center mb-16" data-aos="fade-up">
                 <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4">
                   Nossos Servicos
                 </h2>
@@ -154,7 +165,7 @@ export default function Home() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {services.map((service, i) => (
-                  <div key={i} className="group">
+                  <div key={i} className="group" data-aos="fade-up" data-aos-delay={i * 100}>
                     <div className="bg-white dark:bg-slate-800 rounded-xl p-8 hover:shadow-lg transition-all duration-300 h-full border border-gray-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500">
                       <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
                         {service.icon}
@@ -175,7 +186,7 @@ export default function Home() {
           {/* Why Choose Us */}
           <section className="bg-blue-50 dark:bg-slate-800 py-20 sm:py-32">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-16 text-center">
+              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-16 text-center" data-aos="fade-up">
                 Por que Escolher Leidy Cleaner?
               </h2>
 
@@ -198,7 +209,7 @@ export default function Home() {
                     desc: 'Reserve online em minutos. Confirmacao instantanea e lembretes automaticos.'
                   }
                 ].map((item, i) => (
-                  <div key={i} className="flex gap-6">
+                  <div key={i} className="flex gap-6" data-aos="fade-up" data-aos-delay={i * 100}>
                     <div className="flex-shrink-0">
                       <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-blue-600 text-white text-xl font-bold">
                         ✓
@@ -258,13 +269,13 @@ export default function Home() {
           {/* Testimonials */}
           <section className="bg-gray-50 dark:bg-slate-800 py-20 sm:py-32">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-16 text-center">
+              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-16 text-center" data-aos="fade-up">
                 O que Nossos Clientes Dizem
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {testimonials.map((testimonial, i) => (
-                  <div key={i} className="bg-white dark:bg-slate-700 rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                  <div key={i} className="bg-white dark:bg-slate-700 rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow" data-aos="fade-up" data-aos-delay={i * 100}>
                     <div className="flex items-center gap-1 mb-4">
                       {[...Array(testimonial.rating)].map((_, j) => (
                         <span key={j} className="text-yellow-400 text-xl">★</span>
