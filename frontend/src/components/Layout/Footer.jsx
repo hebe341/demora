@@ -6,15 +6,48 @@ import Link from 'next/link';
  */
 export default function Footer() {
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  const [error, setError] = useState(null);
   const currentYear = new Date().getFullYear();
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
-    if (email) {
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 3000);
+    
+    if (!email) {
+      setError('Por favor, insira um email');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          name: null
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubscribed(true);
+        setEmail('');
+        setTimeout(() => setSubscribed(false), 3000);
+      } else {
+        setError(data.message || 'Erro ao inscrever. Tente novamente.');
+      }
+    } catch (err) {
+      setError('Erro de conexão. Tente novamente mais tarde.');
+      console.error('Newsletter subscription error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -161,19 +194,26 @@ export default function Footer() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
-                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                disabled={loading}
+                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all disabled:opacity-50"
                 required
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg hover:shadow-lg hover:scale-105 transition-all font-bold whitespace-nowrap"
+                disabled={loading}
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg hover:shadow-lg hover:scale-105 transition-all font-bold whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Inscrever
+                {loading ? 'Enviando...' : 'Inscrever'}
               </button>
             </form>
             {subscribed && (
               <p className="text-sm text-green-600 dark:text-green-400 flex items-center gap-2 animate-pulse">
                 ✅ Inscrição realizada com sucesso!
+              </p>
+            )}
+            {error && (
+              <p className="text-sm text-red-600 dark:text-red-400 flex items-center gap-2">
+                ❌ {error}
               </p>
             )}
           </div>

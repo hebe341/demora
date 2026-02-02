@@ -263,4 +263,27 @@ router.put('/company/info', authenticateToken, authorizeRole(['admin']), (req, r
   ProfileController.updateCompanyInfo(req, res);
 });
 
+// ===== NEWSLETTER =====
+const NewsletterController = require('../controllers/NewsletterController');
+
+router.post('/newsletter/subscribe', (req, res) => {
+  NewsletterController.subscribe(req, res);
+});
+
+router.post('/newsletter/unsubscribe', (req, res) => {
+  NewsletterController.unsubscribe(req, res);
+});
+
+router.get('/newsletter/subscribers', authenticateToken, authorizeRole(['admin']), (req, res) => {
+  NewsletterController.getSubscribers(req, res);
+});
+
+router.post('/newsletter/send-all', authenticateToken, authorizeRole(['admin']), (req, res) => {
+  NewsletterController.sendToAll(req, res);
+});
+
+router.get('/newsletter/stats', authenticateToken, authorizeRole(['admin']), (req, res) => {
+  NewsletterController.getStats(req, res);
+});
+
 module.exports = router;

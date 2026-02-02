@@ -256,6 +256,122 @@ class EmailService {
       return false;
     }
   }
+
+  /**
+   * Enviar email de boas-vindas para newsletter
+   */
+  async sendNewsletterWelcome(email, name = 'Leitor') {
+    try {
+      const mailOptions = {
+        from: process.env.EMAIL_USER || 'noreply@leidycleaner.com',
+        to: email,
+        subject: '✨ Bem-vindo à Newsletter - Leidy Cleaner',
+        html: `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px 10px 0 0; text-align: center; }
+                .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; line-height: 1.6; }
+                .cta { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+                .footer { text-align: center; margin-top: 30px; color: #999; font-size: 12px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1>🧹 Leidy Cleaner</h1>
+                  <p>Bem-vindo à nossa Newsletter!</p>
+                </div>
+                <div class="content">
+                  <p>Olá <strong>${name}</strong>,</p>
+                  
+                  <p>Obrigado por se inscrever na Newsletter da Leidy Cleaner!</p>
+                  
+                  <p>A partir de agora você receberá:</p>
+                  <ul>
+                    <li>✨ Dicas de limpeza e organização</li>
+                    <li>📢 Promoções exclusivas para inscritos</li>
+                    <li>🆕 Novos serviços e funcionalidades</li>
+                    <li>💡 Conselhos profissionais</li>
+                  </ul>
+                  
+                  <p>Fique atento para as próximas novidades!</p>
+                  
+                  <p style="margin-top: 30px;">
+                    Qualquer dúvida, <a href="mailto:${process.env.EMAIL_USER || 'contato@leidycleaner.com'}">entre em contato</a> conosco.
+                  </p>
+                </div>
+                <div class="footer">
+                  <p>Você está recebendo este email porque se inscreveu na newsletter.</p>
+                  <p>Pode <a href="https://seu-dominio.com/newsletter/unsubscribe?email=${email}">desinscrever-se</a> a qualquer momento.</p>
+                  <p>&copy; 2024 Leidy Cleaner. Todos os direitos reservados.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      console.log(`✅ Email de boas-vindas da newsletter enviado para ${email}`);
+      return true;
+    } catch (error) {
+      console.error('❌ Erro ao enviar email de boas-vindas:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Enviar email em massa para newsletter
+   */
+  async sendBulkNewsletter(email, name, subject, htmlContent, textContent) {
+    try {
+      const mailOptions = {
+        from: process.env.EMAIL_USER || 'noreply@leidycleaner.com',
+        to: email,
+        subject: subject,
+        html: `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px 10px 0 0; text-align: center; }
+                .content { background: white; padding: 30px; border-radius: 0 0 10px 10px; line-height: 1.6; }
+                .footer { text-align: center; margin-top: 30px; color: #999; font-size: 12px; border-top: 1px solid #eee; padding-top: 20px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h2>🧹 Leidy Cleaner</h2>
+                </div>
+                <div class="content">
+                  ${htmlContent}
+                </div>
+                <div class="footer">
+                  <p>Pode <a href="https://seu-dominio.com/newsletter/unsubscribe?email=${email}">desinscrever-se</a> a qualquer momento.</p>
+                  <p>&copy; 2024 Leidy Cleaner. Todos os direitos reservados.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        `,
+        text: textContent
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      console.log(`✅ Newsletter enviado para ${email}`);
+      return true;
+    } catch (error) {
+      console.error(`❌ Erro ao enviar newsletter para ${email}:`, error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new EmailService();
