@@ -8,6 +8,8 @@ import Footer from '../components/Layout/Footer'
 import PriceCalculator from '../components/UI/PriceCalculator'
 import FAQ from '../components/UI/FAQ'
 import BlogSection from '../components/UI/BlogSection'
+import FeaturedServices from '../components/UI/FeaturedServices'
+import BenefitsSection from '../components/UI/BenefitsSection'
 import { motion } from 'framer-motion'
 
 export default function Home() {
@@ -464,6 +466,9 @@ export default function Home() {
             </div>
           </section>
 
+          {/* Featured Services Carousel */}
+          <FeaturedServices />
+
           {/* Price Calculator Section */}
           <section className="py-20 sm:py-32 bg-gray-50 dark:bg-slate-900">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -582,8 +587,9 @@ export default function Home() {
               </div>
             </div>
           </section>
-            </div>
-          </section>
+
+          {/* Benefits Section */}
+          <BenefitsSection />
 
           {/* Advanced Features */}
           <section className="py-20 sm:py-32 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-900 dark:to-slate-800">
