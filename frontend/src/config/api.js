@@ -34,10 +34,13 @@ export async function apiCall(endpoint, options = {}) {
     ...options.headers
   };
 
-  // Adicionar token auth se existir
-  const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+  // Adicionar token auth se existir (use helper to prefer cookie)
+  try {
+    // lazy require to avoid SSR issues
+    const { getAuthHeader } = require('../utils/authToken');
+    Object.assign(headers, getAuthHeader());
+  } catch (e) {
+    // ignore if helper not available in this environment
   }
 
   if (API_CONFIG.debug) {

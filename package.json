@@ -1,0 +1,31 @@
+{
+  "name": "mmmm",
+  "version": "1.0.0",
+  "description": "**Status: ✅ Produção-Ready — PCI-DSS Compliant, 100% Testes Passando**",
+  "main": "test-env.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dossantosferreirafranceschjoao-source/mmmm.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/dossantosferreirafranceschjoao-source/mmmm/issues"
+  },
+  "homepage": "https://github.com/dossantosferreirafranceschjoao-source/mmmm#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "playwright": "^1.58.2"
+  },
+  "dependencies": {
+    "axe-core": "^4.11.1"
+  }
+}

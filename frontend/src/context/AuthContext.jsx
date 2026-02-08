@@ -9,14 +9,20 @@ export function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Recuperar token do localStorage ao iniciar
+  // Recuperar token (cookie preferred, fallback localStorage)
   useEffect(() => {
-    const savedToken = localStorage.getItem('auth_token');
-    if (savedToken) {
-      setToken(savedToken);
-      // ✅ CORRIGIDO: Validar token com o backend
-      verifyToken(savedToken);
-    } else {
+    try {
+      // dynamic import to avoid SSR issues
+      import('../utils/authToken').then(({ getAuthToken }) => {
+        const savedToken = getAuthToken();
+        if (savedToken) {
+          setToken(savedToken);
+          verifyToken(savedToken);
+        } else {
+          setIsLoading(false);
+        }
+      }).catch(() => setIsLoading(false));
+    } catch (e) {
       setIsLoading(false);
     }
   }, []);
@@ -56,7 +62,7 @@ export function AuthProvider({ children }) {
       
       setUser(data.user);
       setToken(data.accessToken);
-      localStorage.setItem('auth_token', data.accessToken);
+      try { localStorage.setItem('auth_token', data.accessToken); } catch (e) {}
       localStorage.setItem('auth_user', JSON.stringify(data.user));
       
       return data.user;
@@ -79,8 +85,7 @@ export function AuthProvider({ children }) {
       }
       setUser(null);
       setToken(null);
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('auth_user');
+      try { localStorage.removeItem('auth_token'); localStorage.removeItem('auth_user'); } catch (e) {}
     } catch (err) {
       setError(err.message);
     } finally {
@@ -100,7 +105,7 @@ export function AuthProvider({ children }) {
       
       setUser(data.user);
       setToken(data.accessToken);
-      localStorage.setItem('auth_token', data.accessToken);
+      try { localStorage.setItem('auth_token', data.accessToken); } catch (e) {}
       localStorage.setItem('auth_user', JSON.stringify(data.user));
       
       return data.user;

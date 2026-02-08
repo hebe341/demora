@@ -38,9 +38,12 @@ export default class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta name="description" content="Leidy Cleaner - Serviços de limpeza profissional em Porto Alegre. Agende online e receba atendimento rápido e confiável." />
           <meta name="theme-color" content="#0f172a" />
-          {/* Favicon baseado na imagem da marca */}
+          {/* Favicon e ícones da marca */}
           <link rel="icon" href="/icon-brand.jpg" type="image/jpeg" />
+          <link rel="icon" type="image/png" sizes="192x192" href="/icon-brand.jpg" />
           <link rel="apple-touch-icon" href="/icon-brand.jpg" />
+          <link rel="manifest" href="/site.webmanifest" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         </Head>

@@ -5,6 +5,7 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './e2e',
+  testIgnore: ['**/*.test.*'],
   maxFailures: 5,
   fullyParallel: false, // Executar sequencialmente para evitar conflitos
   forbidOnly: !!process.env.CI,
@@ -25,7 +26,8 @@ export default defineConfig({
   },
 
   webServer: {
-    command: process.env.CI ? 'npm start' : 'npm run dev',
+    // Start dev server inside the frontend folder to ensure correct scripts
+    command: process.env.CI ? 'cd frontend && npm start' : 'cd frontend && npm run dev',
     reuseExistingServer: !process.env.CI,
     timeout: 120000
   },

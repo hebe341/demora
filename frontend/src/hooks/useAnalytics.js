@@ -19,12 +19,8 @@ export const useAnalytics = (dateRange = '30days') => {
       setLoading(true);
       setError(null);
 
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      };
+      const { getAuthHeader } = await import('../utils/authToken');
+      const config = { headers: { ...getAuthHeader() } };
 
       // Fetch main analytics dashboard
       const response = await axios.get(
@@ -46,12 +42,8 @@ export const useAnalytics = (dateRange = '30days') => {
 
   const fetchRevenueStats = useCallback(async (options = {}) => {
     try {
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      };
+      const { getAuthHeader } = await import('../utils/authToken');
+      const config = { headers: { ...getAuthHeader() } };
 
       const response = await axios.get(
         `${API_BASE}/analytics/revenue`,
@@ -66,12 +58,8 @@ export const useAnalytics = (dateRange = '30days') => {
 
   const fetchConversionStats = useCallback(async (options = {}) => {
     try {
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      };
+      const { getAuthHeader } = await import('../utils/authToken');
+      const config = { headers: { ...getAuthHeader() } };
 
       const response = await axios.get(
         `${API_BASE}/analytics/conversion`,
@@ -86,12 +74,8 @@ export const useAnalytics = (dateRange = '30days') => {
 
   const fetchCustomerAnalytics = useCallback(async (options = {}) => {
     try {
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      };
+      const { getAuthHeader } = await import('../utils/authToken');
+      const config = { headers: { ...getAuthHeader() } };
 
       const response = await axios.get(
         `${API_BASE}/analytics/customers`,
@@ -106,12 +90,8 @@ export const useAnalytics = (dateRange = '30days') => {
 
   const fetchChurnAnalytics = useCallback(async (options = {}) => {
     try {
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      };
+      const { getAuthHeader } = await import('../utils/authToken');
+      const config = { headers: { ...getAuthHeader() } };
 
       const response = await axios.get(
         `${API_BASE}/analytics/churn`,
@@ -146,13 +126,8 @@ export const useAnalytics = (dateRange = '30days') => {
 
   const exportReport = useCallback(async (format = 'pdf', options = {}) => {
     try {
-      const token = localStorage.getItem('token');
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        responseType: 'blob'
-      };
+      const { getAuthHeader } = await import('../utils/authToken');
+      const config = { headers: { ...getAuthHeader() }, responseType: 'blob' };
 
       const response = await axios.post(
         `${API_BASE}/analytics/export`,
