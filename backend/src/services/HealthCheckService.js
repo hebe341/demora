@@ -52,6 +52,14 @@ class HealthCheckService {
 
       const stats = await EmailQueueService.getQueueStats();
       
+      if (!stats) {
+        return {
+          status: 'degraded',
+          message: 'Queue stats unavailable (fallback mode)',
+          timestamp: new Date().toISOString()
+        };
+      }
+
       return {
         status: stats.failedCount > 100 ? 'degraded' : 'healthy',
         stats: {

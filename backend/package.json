@@ -44,6 +44,7 @@
     "axios": "^1.3.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^2.4.3",
+      "start": "node src/index.js",
     "bull": "^4.16.5",
     "bull-board": "^1.7.2",
     "cookie-parser": "^1.4.7",

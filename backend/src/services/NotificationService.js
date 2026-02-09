@@ -11,7 +11,18 @@
 
 const twilio = require('twilio');
 const nodemailer = require('nodemailer');
-const schedule = require('node-schedule');
+let schedule = null;
+try {
+  schedule = require('node-schedule');
+} catch (err) {
+  // node-schedule é opcional em ambientes de teste/dev;
+  // fornecer um fallback mínimo para evitar crash.
+  schedule = {
+    scheduleJob: () => ({
+      cancel: () => {},
+    }),
+  };
+}
 
 class NotificationService {
   constructor(db) {

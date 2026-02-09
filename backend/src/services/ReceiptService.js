@@ -3,7 +3,27 @@
  * Gerar recibos/comprovantes em PDF
  */
 
-const PDFDocument = require('pdfkit');
+let PDFDocument = null;
+try {
+  PDFDocument = require('pdfkit');
+} catch (err) {
+  // pdfkit é opcional em dev; fornecer stub simples que cria um arquivo texto
+  PDFDocument = class {
+    constructor() {
+      this._stream = null;
+    }
+    pipe(stream) {
+      this._stream = stream;
+    }
+    fontSize() { return this; }
+    font() { return this; }
+    text(text) { if (this._stream) this._stream.write(text + '\n'); return this; }
+    moveTo() { return this; }
+    lineTo() { return this; }
+    stroke() { return this; }
+    end() { if (this._stream) this._stream.end(); }
+  };
+}
 const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');

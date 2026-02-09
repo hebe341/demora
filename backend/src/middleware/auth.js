@@ -97,3 +97,7 @@ module.exports = {
   generateRefreshToken, // ✅ NOVO
   requireRole, // compat
 };
+
+// Compatibilidade com código legado: nomes curtos
+module.exports.authenticate = module.exports.authenticateToken;
+module.exports.authorize = module.exports.authorizeRole;

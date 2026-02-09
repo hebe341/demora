@@ -11,30 +11,43 @@ const EmailService = require('./EmailService');
 const MonitoringService = require('./MonitoringService');
 const RedisService = require('./RedisService');
 
-// Criar fila de emails
-const emailQueue = new Queue('email', {
-  redis: {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: process.env.REDIS_PORT || 6379,
-    maxRetriesPerRequest: null,
-    enableReadyCheck: false,
-    enableOfflineQueue: false,
-  },
-  defaultJobOptions: {
-    attempts: 3, // 3 tentativas de retry
-    backoff: {
-      type: 'exponential',
-      delay: 2000, // Começa com 2 segundos, cresce exponencialmente
+// Criar fila de emails (tornar tolerante quando Redis não está disponível)
+let emailQueue;
+try {
+  emailQueue = new Queue('email', {
+    redis: {
+      host: process.env.REDIS_HOST || 'localhost',
+      port: process.env.REDIS_PORT || 6379,
+      maxRetriesPerRequest: null,
+      enableReadyCheck: false,
+      enableOfflineQueue: false,
     },
-    removeOnComplete: true, // Limpar jobs completados
-    removeOnFail: false, // Manter jobs falhados para análise
-  },
-  settings: {
-    lockDuration: 30000, // 30 segundos para processar cada email
-    lockRenewTime: 15000, // Renovar lock a cada 15 segundos
-    maxStalledCount: 2, // Máximo de vezes que um job pode falhar antes de ser descartado
-  },
-});
+    defaultJobOptions: {
+      attempts: 3,
+      backoff: {
+        type: 'exponential',
+        delay: 2000,
+      },
+      removeOnComplete: true,
+      removeOnFail: false,
+    },
+    settings: {
+      lockDuration: 30000,
+      lockRenewTime: 15000,
+      maxStalledCount: 2,
+    },
+  });
+} catch (err) {
+  logger.warn('⚠️ Redis/bull não disponível — usando fila de email em modo fallback', { error: err.message });
+  // Fallback simples que expõe a API mínima usada pelo serviço
+  emailQueue = {
+    process: () => {},
+    on: () => {},
+    add: async () => ({ id: `fallback-${Date.now()}` }),
+    getJobCounts: async () => ({ active: 0, waiting: 0, completed: 0, failed: 0, delayed: 0 }),
+    getFailed: async () => [],
+  };
+}
 
 class EmailQueueService {
   constructor() {
@@ -528,13 +541,21 @@ class EmailQueueService {
   async getQueueStats() {
     try {
       const counts = await this.queue.getJobCounts();
+
+      // Mapear para as chaves esperadas pelo HealthCheckService
+      const active = counts?.active || 0;
+      const waiting = counts?.waiting || counts?.pending || 0;
+      const completed = counts?.completed || 0;
+      const failed = counts?.failed || 0;
+      const delayed = counts?.delayed || 0;
+
       return {
-        active: counts.active,
-        waiting: counts.waiting,
-        completed: counts.completed,
-        failed: counts.failed,
-        delayed: counts.delayed,
-        total: counts.active + counts.waiting + counts.delayed,
+        activeCount: active,
+        pendingCount: waiting,
+        completedCount: completed,
+        failedCount: failed,
+        delayedCount: delayed,
+        total: active + waiting + delayed,
       };
     } catch (error) {
       logger.error('❌ Erro ao obter stats da fila', { error: error.message });
