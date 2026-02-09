@@ -80,9 +80,42 @@ class PixService {
         return { success: true, status: 'paid', amount: pix.amount };
       }
 
-      // TODO: Integrar com API do banco para verificar status real
-      // Por agora, usar webhook quando chegar pagamento
-      
+      // Se houver uma API bancária configurada, tentar verificar o status
+      const bankApiUrl = process.env.PIX_BANK_API_URL; // ex: https://bank.example.com/api
+      if (bankApiUrl) {
+        try {
+          const fetchFn = global.fetch || (async (...args) => { const nf = require('node-fetch'); return nf(...args); });
+          // Endpoint esperado: GET {PIX_BANK_API_URL}/payments/:pixTransactionId
+          const res = await fetchFn(`${bankApiUrl.replace(/\/$/, '')}/payments/${encodeURIComponent(pixTransactionId)}`);
+          if (res.ok) {
+            const body = await res.json();
+            // body esperado: { status: 'paid'|'pending'|'failed', bankTransactionId?: string, amount?: number }
+            if (body.status === 'paid') {
+              // Atualizar DB local
+              await db.run(
+                "UPDATE pix_transactions SET status = 'paid', bank_transaction_id = ? WHERE id = ?",
+                body.bankTransactionId || null,
+                pixTransactionId
+              );
+              if (pix.order_id) {
+                await db.run(
+                  "UPDATE bookings SET status = 'confirmed', paid = 1 WHERE id = ?",
+                  pix.order_id
+                );
+              }
+              return { success: true, status: 'paid', amount: body.amount || pix.amount };
+            }
+            // Se não estiver pago, retornar status atual vindo do banco
+            return { success: true, status: body.status || pix.status, amount: body.amount || pix.amount, expiresAt: pix.expires_at };
+          } else {
+            logger.warn('Bank API returned non-ok status for PIX verification', { pixTransactionId, status: res.status });
+          }
+        } catch (err) {
+          logger.error('Error contacting bank API for PIX verification', err);
+        }
+      }
+
+      // Fallback: usar webhook quando chegar pagamento ou estado local
       return { 
         success: true, 
         status: pix.status, 

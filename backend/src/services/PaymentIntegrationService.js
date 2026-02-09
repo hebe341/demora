@@ -4,6 +4,7 @@
  */
 
 const logger = require('../utils/logger');
+const PixService = require('./PixService');
 
 class PaymentIntegrationService {
   constructor() {
@@ -96,7 +97,7 @@ class PaymentIntegrationService {
    */
   async processWebhook(event) {
     try {
-      const { type, data } = event;
+      const { type, data, source } = event;
 
       if (type === 'charge.succeeded') {
         const chargeId = data.object.id;
@@ -118,6 +119,18 @@ class PaymentIntegrationService {
         if (charge) {
           charge.refunded = true;
           charge.refundAmount = data.object.amount_refunded;
+        }
+      } else if (source === 'pix' || type === 'pix.payment_confirmed' || type === 'pix.paid') {
+        // Evento de PIX vindo do provedor/banco
+        try {
+          const pixId = data?.pixTransactionId || data?.id || data?.transactionId;
+          const bankTransactionId = data?.bankTransactionId || data?.txid || null;
+          if (pixId) {
+            await PixService.confirmPayment(pixId, bankTransactionId);
+            logger.info('PIX webhook processed and payment confirmed', { pixId, bankTransactionId });
+          }
+        } catch (err) {
+          logger.error('Error processing PIX webhook', err);
         }
       }
 

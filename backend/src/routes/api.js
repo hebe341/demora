@@ -504,6 +504,12 @@ router.use('/payments', authenticateToken, PaymentIntegrationController);
 const PushNotificationController = require('../controllers/PushNotificationController');
 router.use('/push-notifications', authenticateToken, PushNotificationController);
 
+// ===== SMS / WHATSAPP NOTIFICATIONS (Preferences & History) =====
+const NotificationService = require('../services/NotificationService');
+const notificationService = new NotificationService(require('../db'));
+const notificationRoutes = require('./notificationRoutes');
+router.use('/notifications', notificationRoutes(require('../db'), notificationService));
+
 // ===== REFERRAL PROGRAM =====
 const ReferralController = require('../controllers/ReferralController');
 router.use('/referrals', authenticateToken, ReferralController);
