@@ -643,3 +643,30 @@ const receiptRoutes = require('./receiptRoutes');
 router.use('/receipts', receiptRoutes);
 
 module.exports = router;
+
+// ===== EXTRA FEATURES (6 Bonus Services) =====
+// ANALYTICS DASHBOARD
+const analyticsRoutes = require('./analyticsRoutes');
+router.use('/analytics', authenticateToken, analyticsRoutes);
+
+// COUPONS & DISCOUNTS
+const couponRoutes = require('./couponRoutes');
+router.use('/coupons', couponRoutes);
+
+// RECURRING BOOKINGS
+const recurringBookingRoutes = require('./recurringBookingRoutes');
+router.use('/recurring-bookings', authenticateToken, recurringBookingRoutes);
+
+// REPORTS & PDF
+const reportRoutes = require('./reportRoutes');
+router.use('/reports', reportRoutes);
+
+// SMS & WHATSAPP
+const smsRoutes = require('./smsRoutes');
+router.use('/sms', smsRoutes);
+
+// REFERRAL PROGRAM
+const referralRoutes = require('./referralRoutes');
+router.use('/referrals', authenticateToken, referralRoutes);
+
+module.exports = router;
