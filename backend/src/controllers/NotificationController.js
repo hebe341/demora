@@ -3,23 +3,23 @@
  * Gerencia notificações automáticas
  */
 
-class NotificationController {
+class NotificationController_Auto_66 {
   /**
    * Enviar notificação de confirmação
    */
-  async sendBookingConfirmation(bookingId) {
+  async NotificationController_Auto_66(bookingId) {
     try {
       // const booking = await BookingService.findById(bookingId);
       // const user = await UserService.findById(booking.userId);
 
       // Enviar email
-      // await this.sendEmail(user.email, 'booking-confirmation', booking);
+      // await this.sendEmail(user.email, 'NotificationController_Auto_66', booking);
 
       // Enviar SMS
       // await this.sendSMS(user.phone, `Seu agendamento foi confirmado para ${booking.date}`);
 
       // Enviar notificação push
-      // await this.sendPushNotification(user.id, 'Agendamento confirmado!');
+      // await this.NotificationController_Auto_66(user.id, 'Agendamento confirmado!');
 
       return true;
     } catch (error) {
@@ -31,7 +31,7 @@ class NotificationController {
   /**
    * Enviar lembretes 24h antes
    */
-  async sendReminderNotifications() {
+  async NotificationController_Auto_66() {
     try {
       // const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
       // const bookings = await BookingService.findByDate(tomorrow);
@@ -72,7 +72,7 @@ class NotificationController {
   /**
    * Follow-up pós-serviço
    */
-  async sendFollowUpNotification(bookingId) {
+  async NotificationController_Auto_66(bookingId) {
     try {
       // const booking = await BookingService.findById(bookingId);
       // const user = await UserService.findById(booking.userId);
@@ -119,7 +119,7 @@ class NotificationController {
   /**
    * Enviar notificação push
    */
-  async sendPushNotification(userId, message) {
+  async NotificationController_Auto_66(userId, message) {
     try {
       // Implementar com Firebase Cloud Messaging
       return true;
@@ -130,4 +130,4 @@ class NotificationController {
   }
 }
 
-module.exports = new NotificationController();
+module.exports = new NotificationController_Auto_66();

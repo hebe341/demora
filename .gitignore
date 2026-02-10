@@ -1,3 +1,18 @@
+# Local env files
+*.env
+backend/.env
+/.env.production
+/.env.local
+
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
 # Gitignore para LimpezaPro
 
 # Dependencies
@@ -61,3 +76,7 @@ docker-compose.override.yml
 # Backups
 backups/
 *.bak
+
+# Docker secrets: ignore real secret files, keep examples
+/docker/secrets/*
+!docker/secrets/*.example

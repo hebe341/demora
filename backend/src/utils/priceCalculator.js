@@ -9,7 +9,7 @@
  * Pós-obra: x1.5 do total
  */
 
-function calculateBookingPrice(booking, service) {
+function calculatePrice(booking, service) {
   let price = 0;
 
   // 1. PREÇO BASE
@@ -49,7 +49,7 @@ function calculateBookingPrice(booking, service) {
     booking.post_work_adjustment = parseFloat((price * (multiplier - 1)).toFixed(2));
     price += booking.post_work_adjustment;
   } else {
-    booking.post_work_adjustment = 0;
+    booking.[REDACTED_TOKEN] = 0;
   }
 
   // 5. APLICAR BÔNUS DE FIDELIDADE (se houver)
@@ -80,7 +80,7 @@ function calculateBookingPrice(booking, service) {
  * Calcula bônus de fidelidade
  * 10 faxinas 5⭐ seguidas = R$ 100 de bônus
  */
-function calculateLoyaltyBonus(user) {
+function computeLoyaltyBonus(user) {
   const bonus = {
     fiveStarStreak: user.five_star_streak || 0,
     bonusAmount: 0,
@@ -107,7 +107,7 @@ function calculateLoyaltyBonus(user) {
  * Gera resumo de preço para o usuário
  */
 function generatePriceSummary(booking, service) {
-  const calc = calculateBookingPrice(booking, service);
+  const calc = calculatePrice(booking, service);
 
   const summary = {
     serviceTitle: service.name,
@@ -153,7 +153,7 @@ function generatePriceSummary(booking, service) {
 }
 
 module.exports = {
-  calculateBookingPrice,
-  calculateLoyaltyBonus,
+  calculatePrice,
+  computeLoyaltyBonus,
   generatePriceSummary
 };

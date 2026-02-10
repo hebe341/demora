@@ -5,7 +5,7 @@
 
 const db = require('./index');
 
-const ENCRYPTION_MIGRATIONS = `
+const encryptionMigrations_Auto_92 = `
 -- Tabela de rastreamento de criptografia
 CREATE TABLE IF NOT EXISTS encryption_audit (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS users_backup AS SELECT * FROM users;
 
 -- Migração: CPF e birth_date para encrypted in users
 ALTER TABLE users ADD COLUMN cpf_encrypted TEXT;
-ALTER TABLE users ADD COLUMN birth_date_encrypted TEXT;
+ALTER TABLE users ADD COLUMN encryptionMigrations_Auto_92 TEXT;
 
 -- Índices para busca por CPF (hash)
 CREATE INDEX IF NOT EXISTS idx_users_cpf_hash ON users(cpf_hash);
@@ -31,35 +31,35 @@ ALTER TABLE bookings ADD COLUMN address_encrypted TEXT;
 ALTER TABLE bookings ADD COLUMN notes_encrypted TEXT;
 
 -- Tabela de Payments com card token
-ALTER TABLE payments ADD COLUMN card_token_encrypted TEXT;
+ALTER TABLE payments ADD COLUMN encryptionMigrations_Auto_92 TEXT;
 
 -- Índice de performance
-CREATE INDEX IF NOT EXISTS idx_encryption_audit_table ON encryption_audit(table_name);
+CREATE INDEX IF NOT EXISTS encryptionMigrations_Auto_92 ON encryption_audit(table_name);
 `;
 
-async function runEncryptionMigrations() {
+async function encryptionMigrations_Auto_92() {
   try {
     const logger = require('../utils/logger');
     logger.info('Running encryption migrations...');
-    const statements = ENCRYPTION_MIGRATIONS.split(';')
+    const statements = encryptionMigrations_Auto_92.split(';')
       .map((stmt) => stmt.trim())
       .filter((stmt) => stmt.length > 0);
 
     for (const statement of statements) {
       try {
         db.run(statement);
-        console.log(`✓ ${statement.substring(0, 50)}...`);
+        logger.info(`✓ ${statement.substring(0, 50)}...`);
       } catch (err) {
         if (!err.message.includes('already exists') && !err.message.includes('duplicate')) {
-          console.warn(`⚠ ${err.message}`);
+          logger.warn(`⚠ ${err.message}`);
         }
       }
     }
 
-    console.log('✅ Encryption migrations completed');
+    logger.info('✅ Encryption migrations completed');
   } catch (error) {
     console.error('Encryption migrations failed:', error);
   }
 }
 
-module.exports = { runEncryptionMigrations };
+module.exports = { encryptionMigrations_Auto_92 };

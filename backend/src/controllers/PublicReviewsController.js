@@ -5,7 +5,7 @@
 
 const db = require('../db');
 
-class PublicReviewsController {
+class PublicReviewsController_Auto_77 {
   /**
    * Buscar avaliações públicas (para página de depoimentos)
    */
@@ -270,4 +270,4 @@ class PublicReviewsController {
   }
 }
 
-module.exports = new PublicReviewsController();
+module.exports = new PublicReviewsController_Auto_77();

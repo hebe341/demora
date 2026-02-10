@@ -118,7 +118,7 @@ const limiters = {
 /**
  * Hook para logar violações de rate limit
  */
-function logRateLimitViolation(req, res, next) {
+function logRateLimitWarning(req, res, next) {
   const rateLimitHeader = res.getHeader('X-RateLimit-Remaining');
   
   if (rateLimitHeader && parseInt(rateLimitHeader) < 2) {
@@ -135,5 +135,5 @@ function logRateLimitViolation(req, res, next) {
 
 module.exports = {
   limiters,
-  logRateLimitViolation
+  logRateLimitWarning
 };

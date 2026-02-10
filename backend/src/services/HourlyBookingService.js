@@ -1,5 +1,5 @@
 /**
- * HourlyBookingService.js
+ * HourlyBookingService_Auto_192.js
  * Agendamentos por minuto/hora em vez de pacotes
  */
 
@@ -8,7 +8,7 @@ const path = require('path');
 
 const DB_PATH = path.join(__dirname, '../../backend_data/database.db');
 
-class HourlyBookingService {
+class HourlyBookingService_Auto_192 {
   /**
    * Criar agendamento por horas
    */
@@ -37,7 +37,7 @@ class HourlyBookingService {
   /**
    * Obter tarifas por hora por profissional
    */
-  static getProfessionalRates(professionalId) {
+  static HourlyBookingService_Auto_192(professionalId) {
     return new Promise((resolve, reject) => {
       const db = new sqlite3.Database(DB_PATH);
 
@@ -131,4 +131,4 @@ class HourlyBookingService {
   }
 }
 
-module.exports = HourlyBookingService;
+module.exports = HourlyBookingService_Auto_192;

@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-leidy}
+    # Use Docker secrets in production (create secrets before deploy)
+    secrets:
+      - postgres_password
+    entrypoint: sh -c 'if [ -f /run/secrets/postgres_password ]; then export POSTGRES_PASSWORD=$(cat /run/secrets/postgres_password); fi; docker-entrypoint.sh postgres'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/setup-db.sql:/[REDACTED_TOKEN].d/setup-db.sql:ro
+
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.backend
+    restart: unless-stopped
+    env_file:
+      - ./.env.production
+    environment:
+      - NODE_ENV=production
+      - PORT=${PORT:-3001}
+      - DATABASE_URL=${DATABASE_URL}
+    secrets:
+      - jwt_secret
+      - stripe_secret
+      - mercadopago_token
+    depends_on:
+      - postgres
+    ports:
+      - "3001:3001"
+
+  frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.frontend
+    restart: unless-stopped
+    env_file:
+      - ./.env.production
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    ports:
+      - "3000:3000"
+
+  nginx:
+    image: nginx:stable
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  pgdata:
+
+secrets:
+  postgres_password:
+    external: true
+  jwt_secret:
+    external: true
+  stripe_secret:
+    external: true
+  mercadopago_token:
+    external: true

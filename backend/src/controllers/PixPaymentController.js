@@ -1,11 +1,11 @@
 /**
- * PixPaymentController.js
+ * PixPaymentController_Auto_72.js
  * Controllers para endpoints PIX
  */
 
 const PixPaymentService = require('../services/PixPaymentService');
 
-class PixPaymentController {
+class PixPaymentController_Auto_72 {
   constructor(db) {
     this.pixService = new PixPaymentService(db);
   }
@@ -159,4 +159,4 @@ class PixPaymentController {
   }
 }
 
-module.exports = PixPaymentController;
+module.exports = PixPaymentController_Auto_72;

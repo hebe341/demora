@@ -99,7 +99,7 @@ const validateReviewInput = (data) => {
   return { valid: errors.length === 0, errors };
 };
 
-const validateCompanyInfoInput = (data) => {
+const validatePayoutInput = (data) => {
   const errors = [];
 
   if (data.cnpj && !validateCNPJ(data.cnpj)) {
@@ -130,5 +130,5 @@ module.exports = {
   validateBookingInput,
   validatePaymentInput,
   validateReviewInput,
-  validateCompanyInfoInput,
+  validatePayoutInput,
 };

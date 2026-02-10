@@ -7,7 +7,7 @@
 const { getDb } = require('../db/sqlite');
 const logger = require('../utils/logger');
 
-class RecommendationService {
+class RecommendationService_Auto_214 {
   /**
    * Recomendar serviços correlatos
    * Baseado em:
@@ -15,7 +15,7 @@ class RecommendationService {
    * 2. Popularidade regional
    * 3. Histórico do cliente
    */
-  async getSmartRecommendations(userId, currentServiceId, limit = 3) {
+  async RecommendationService_Auto_214(userId, currentServiceId, limit = 3) {
     try {
       const db = await getDb();
 
@@ -47,7 +47,7 @@ class RecommendationService {
       // 2. Se usuário é conhecido, recomendação personalizada
       let personalizedRecs = [];
       if (userId) {
-        personalizedRecs = await this.getPersonalizedRecommendations(db, userId, currentServiceId, limit);
+        personalizedRecs = await this.RecommendationService_Auto_214(db, userId, currentServiceId, limit);
       }
 
       // 3. Combinar e deduplicas
@@ -71,7 +71,7 @@ class RecommendationService {
   /**
    * Recomendações personalizadas por usuário
    */
-  async getPersonalizedRecommendations(db, userId, currentServiceId, limit) {
+  async RecommendationService_Auto_214(db, userId, currentServiceId, limit) {
     try {
       const userHistory = await new Promise((resolve, reject) => {
         db.all(
@@ -222,7 +222,7 @@ class RecommendationService {
   /**
    * Upsell recommendations
    */
-  async getUpsellRecommendations(userId, currentServiceId) {
+  async RecommendationService_Auto_214(userId, currentServiceId) {
     const complementary = {
       'limpeza-residencial': ['higienização', 'deodoração', 'organização'],
       'limpeza-comercial': ['conservação', 'manutenção', 'higienização'],
@@ -241,4 +241,4 @@ class RecommendationService {
   }
 }
 
-module.exports = new RecommendationService();
+module.exports = new RecommendationService_Auto_214();

@@ -3,7 +3,20 @@
  * Gerencia CORS, URLs, segurança por estágio (dev/staging/prod)
  */
 
+const fs = require('fs');
 const nodeEnv = process.env.NODE_ENV || 'development';
+
+function readSecret(name) {
+  // Prefer explicit env var
+  if (process.env[name]) return process.env[name];
+  // Allow {VAR}_FILE pointing to a path
+  const fileEnv = process.env[name + '_FILE'];
+  if (fileEnv && fs.existsSync(fileEnv)) return fs.readFileSync(fileEnv, 'utf8').trim();
+  // Docker secrets are mounted at /run/secrets/<name> (lowercase)
+  const secretPath = `/run/secrets/${name.toLowerCase()}`;
+  if (fs.existsSync(secretPath)) return fs.readFileSync(secretPath, 'utf8').trim();
+  return undefined;
+}
 
 const configs = {
   development: {
@@ -17,7 +30,7 @@ const configs = {
     ],
     secureCookies: false,
     allowCredentials: true,
-    jwtSecret: process.env.JWT_SECRET || 'dev-secret-change-in-prod',
+    jwtSecret: readSecret('JWT_SECRET') || process.env.JWT_SECRET || '[REDACTED_TOKEN]',
     emailService: {
       enabled: true,
       verifyEmail: false // Skip email verification in dev
@@ -40,7 +53,7 @@ const configs = {
     ],
     secureCookies: true,
     allowCredentials: true,
-    jwtSecret: process.env.JWT_SECRET || 'change-me-in-env',
+    jwtSecret: readSecret('JWT_SECRET') || process.env.JWT_SECRET || 'change-me-in-env',
     emailService: {
       enabled: true,
       verifyEmail: true
@@ -66,7 +79,7 @@ const configs = {
     ].filter(Boolean),
     secureCookies: true,
     allowCredentials: true,
-    jwtSecret: process.env.JWT_SECRET, // OBRIGATÓRIO em prod
+    jwtSecret: readSecret('JWT_SECRET') || process.env.JWT_SECRET, // OBRIGATÓRIO em prod
     emailService: {
       enabled: true,
       verifyEmail: true,
@@ -134,12 +147,12 @@ module.exports = {
 
   // Headers de segurança recomendados
   getSecurityHeaders: () => ({
-    'X-Content-Type-Options': 'nosniff',
+    '[REDACTED_TOKEN]': 'nosniff',
     'X-Frame-Options': 'DENY',
     'X-XSS-Protection': '1; mode=block',
-    'Strict-Transport-Security': selectedConfig.secureCookies ? 'max-age=31536000; includeSubDomains' : undefined,
-    'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
-    'Referrer-Policy': 'no-referrer-when-downgrade'
+    '[REDACTED_TOKEN]': selectedConfig.secureCookies ? 'max-age=31536000; includeSubDomains' : undefined,
+    '[REDACTED_TOKEN]': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+    'Referrer-Policy': '[REDACTED_TOKEN]'
   }),
 
   // Config para fetch/axios no browser

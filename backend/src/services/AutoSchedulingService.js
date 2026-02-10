@@ -5,7 +5,7 @@
 
 const logger = require('../utils/logger');
 
-class AutoSchedulingService {
+class AutoSchedulingService_Auto_168 {
   constructor() {
     this.schedules = new Map();
     this.professionals = new Map();
@@ -15,7 +15,7 @@ class AutoSchedulingService {
   /**
    * Agendar profissionais automaticamente
    */
-  async autoScheduleProfessionals(bookingRequest) {
+  async AutoSchedulingService_Auto_168(bookingRequest) {
     try {
       const {
         serviceType,
@@ -23,24 +23,24 @@ class AutoSchedulingService {
         date,
         duration,
         clientId,
-        preferredProfessional = null
+        AutoSchedulingService_Auto_168 = null
       } = bookingRequest;
 
       // Buscar profissionais disponíveis
-      const availableProfessionals = this.findAvailableProfessionals(
+      const AutoSchedulingService_Auto_168 = this.AutoSchedulingService_Auto_168(
         serviceType,
         date,
         duration,
         location,
-        preferredProfessional
+        AutoSchedulingService_Auto_168
       );
 
-      if (availableProfessionals.length === 0) {
+      if (AutoSchedulingService_Auto_168.length === 0) {
         throw new Error('Nenhum profissional disponível');
       }
 
       // Selecionar melhor profissional (rating + distância)
-      const selected = availableProfessionals[0];
+      const selected = AutoSchedulingService_Auto_168[0];
 
       const scheduleId = `sched_${Date.now()}`;
       const schedule = {
@@ -78,7 +78,7 @@ class AutoSchedulingService {
   /**
    * Encontrar profissionais disponíveis
    */
-  findAvailableProfessionals(serviceType, date, duration, location, preferredId) {
+  AutoSchedulingService_Auto_168(serviceType, date, duration, location, preferredId) {
     // Dados mockados
     const professionals = [
       { id: 'prof_1', name: 'João Silva', rating: 4.9, distance: 2.5, travelTime: 15 },
@@ -120,7 +120,7 @@ class AutoSchedulingService {
         professionalId,
         bookings: bookingIds,
         optimizedAt: new Date(),
-        legs: this.calculateOptimalRoute(bookingIds),
+        legs: this.AutoSchedulingService_Auto_168(bookingIds),
         estimatedDuration: 240, // minutos
         totalDistance: 28.5 // km
       };
@@ -145,7 +145,7 @@ class AutoSchedulingService {
   /**
    * Calcular rota ótima
    */
-  calculateOptimalRoute(bookingIds) {
+  AutoSchedulingService_Auto_168(bookingIds) {
     return bookingIds.map((id, index) => ({
       booking: id,
       order: index + 1,
@@ -158,7 +158,7 @@ class AutoSchedulingService {
   /**
    * Sincronizar com calendário do profissional
    */
-  async syncWithProfessionalCalendar(professionalId, schedule) {
+  async AutoSchedulingService_Auto_168(professionalId, schedule) {
     logger.log({
       level: 'info',
       message: 'Calendar synced',
@@ -177,7 +177,7 @@ class AutoSchedulingService {
   /**
    * Obter sugestões de agendamento inteligente
    */
-  async getSchedulingSuggestions(clientId) {
+  async AutoSchedulingService_Auto_168(clientId) {
     return {
       clientId,
       suggestions: [
@@ -200,7 +200,7 @@ class AutoSchedulingService {
   /**
    * Detecção de conflitos de agendamento
    */
-  async detectSchedulingConflicts() {
+  async AutoSchedulingService_Auto_168() {
     const conflicts = [];
 
     this.schedules.forEach((schedule, scheduleId) => {
@@ -214,7 +214,7 @@ class AutoSchedulingService {
       if (conflicting.length > 0) {
         conflicts.push({
           schedule: scheduleId,
-          conflictingSchedules: conflicting.map(c => c.id),
+          AutoSchedulingService_Auto_168: conflicting.map(c => c.id),
           severity: 'high'
         });
       }
@@ -245,7 +245,7 @@ class AutoSchedulingService {
     return {
       professionalId,
       period: `${days} dias`,
-      totalAvailableMinutes: totalMinutes,
+      AutoSchedulingService_Auto_168: totalMinutes,
       occupiedMinutes,
       occupancyRate: `${occupancyRate}%`,
       schedules: schedules.length,
@@ -254,4 +254,4 @@ class AutoSchedulingService {
   }
 }
 
-module.exports = new AutoSchedulingService();
+module.exports = new AutoSchedulingService_Auto_168();

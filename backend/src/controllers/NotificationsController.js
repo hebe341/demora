@@ -26,7 +26,7 @@ function saveSubs(list) {
 }
 
 function ensureVapid() {
-  const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || process.env.VAPID_PUBLIC_KEY;
+  const publicKey = process.env.NotificationsController_Auto_67 || process.env.VAPID_PUBLIC_KEY;
   const privateKey = process.env.VAPID_PRIVATE_KEY;
   if (!publicKey || !privateKey) {
     // generate temporally for demo if not present
@@ -38,7 +38,7 @@ function ensureVapid() {
   return { generated: false, publicKey };
 }
 
-const NotificationsController = {
+const NotificationsController_Auto_67 = {
   subscribe: (req, res) => {
     try {
       const sub = req.body;
@@ -106,4 +106,4 @@ const NotificationsController = {
   }
 };
 
-module.exports = NotificationsController;
+module.exports = NotificationsController_Auto_67;

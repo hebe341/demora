@@ -6,7 +6,7 @@
 const logger = require('../utils/logger');
 const crypto = require('crypto');
 
-class AdvancedEmailService {
+class AdvancedEmailService_Auto_164 {
   constructor() {
     this.templates = new Map();
     this.campaigns = new Map();
@@ -461,4 +461,4 @@ class AdvancedEmailService {
   }
 }
 
-module.exports = new AdvancedEmailService();
+module.exports = new AdvancedEmailService_Auto_164();

@@ -1,3 +1,23 @@
+const util = require('util');
+
+function formatArgs(args) {
+  return args.map(a => (typeof a === 'string' ? a : util.inspect(a))).join(' ');
+}
+
+function maskSensitive(msg) {
+  // Quick masking: redact common token patterns
+  return msg.replace(/(sk_live_[A-Za-z0-9_\-]+)/g, '[REDACTED_STRIPE_SK]')
+    .replace(/(pk_live_[A-Za-z0-9_\-]+)/g, '[REDACTED_STRIPE_PK]')
+    .replace(/(https?:\/\/[^\s@]+@sentry\.io\/[0-9]+)/g, '[REDACTED_SENTRY_DSN]')
+    .replace(/([A-Fa-f0-9]{32,})/g, '[REDACTED_TOKEN]');
+}
+
+module.exports = {
+  info: (...args) => console.info('[info]', maskSensitive(formatArgs(args))),
+  warn: (...args) => console.warn('[warn]', maskSensitive(formatArgs(args))),
+  error: (...args) => console.error('[error]', maskSensitive(formatArgs(args))),
+  debug: (...args) => console.debug('[debug]', maskSensitive(formatArgs(args))),
+};
 const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, printf, colorize } = format;
 const path = require('path');
@@ -28,10 +48,10 @@ const jsonFormat = combine(
 // ✅ NOVO: Tentar usar daily-rotate-file se disponível
 let rotateFile;
 try {
-  rotateFile = require('winston-daily-rotate-file');
+  rotateFile = require('[REDACTED_TOKEN]');
 } catch (e) {
   rotateFile = null;
-  console.warn('⚠️ winston-daily-rotate-file não instalado, usando arquivo simples');
+  console.warn('⚠️ [REDACTED_TOKEN] não instalado, usando arquivo simples');
 }
 
 // ✅ NOVO: Configurar transports

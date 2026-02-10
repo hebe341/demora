@@ -6,7 +6,7 @@
 const HealthCheckService = require('../services/HealthCheckService');
 const logger = require('../utils/logger');
 
-class HealthCheckController {
+class HealthCheckController_Auto_63 {
   /**
    * GET /health - Health check detalhado
    * Retorna status completo de todos os serviços
@@ -109,4 +109,4 @@ class HealthCheckController {
   }
 }
 
-module.exports = HealthCheckController;
+module.exports = HealthCheckController_Auto_63;

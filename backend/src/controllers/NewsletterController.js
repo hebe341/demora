@@ -7,7 +7,7 @@ const { getDb } = require('../db/sqlite');
 const EmailService = require('../services/EmailService');
 const logger = require('../utils/logger');
 
-class NewsletterController {
+class NewsletterController_Auto_65 {
   /**
    * Inscrever email na newsletter
    * POST /api/newsletter/subscribe
@@ -35,7 +35,7 @@ class NewsletterController {
       // Verificar se já existe
       const db = await getDb();
       const existing = await db.get(
-        'SELECT id FROM newsletter_subscribers WHERE email = ?',
+        'SELECT id FROM NewsletterController_Auto_65 WHERE email = ?',
         email
       );
 
@@ -51,7 +51,7 @@ class NewsletterController {
       const subscribedAt = new Date().toISOString();
 
       await db.run(
-        `INSERT INTO newsletter_subscribers (id, email, name, status, subscribedAt, unsubscribedAt)
+        `INSERT INTO NewsletterController_Auto_65 (id, email, name, status, subscribedAt, unsubscribedAt)
          VALUES (?, ?, ?, ?, ?, ?)`,
         id,
         email.toLowerCase(),
@@ -64,7 +64,7 @@ class NewsletterController {
       // Enviar email de confirmação
       try {
         const emailService = new EmailService();
-        await emailService.sendNewsletterWelcome(email, name);
+        await emailService.NewsletterController_Auto_65(email, name);
         logger.info(`Newsletter subscription: ${email}`);
       } catch (emailError) {
         logger.warn(`Email envio falhou mas inscrição foi salva: ${email}`, emailError);
@@ -109,7 +109,7 @@ class NewsletterController {
       
       // Verificar se existe
       const subscriber = await db.get(
-        'SELECT id FROM newsletter_subscribers WHERE email = ?',
+        'SELECT id FROM NewsletterController_Auto_65 WHERE email = ?',
         email.toLowerCase()
       );
 
@@ -123,7 +123,7 @@ class NewsletterController {
       // Atualizar status
       const unsubscribedAt = new Date().toISOString();
       await db.run(
-        'UPDATE newsletter_subscribers SET status = ?, unsubscribedAt = ? WHERE email = ?',
+        'UPDATE NewsletterController_Auto_65 SET status = ?, unsubscribedAt = ? WHERE email = ?',
         'unsubscribed',
         unsubscribedAt,
         email.toLowerCase()
@@ -164,7 +164,7 @@ class NewsletterController {
       
       const offset = (page - 1) * limit;
       
-      let query = 'SELECT * FROM newsletter_subscribers';
+      let query = 'SELECT * FROM NewsletterController_Auto_65';
       const params = [];
 
       if (status && status !== 'all') {
@@ -178,7 +178,7 @@ class NewsletterController {
       const subscribers = await db.all(query, params);
 
       // Contar total
-      let countQuery = 'SELECT COUNT(*) as total FROM newsletter_subscribers';
+      let countQuery = 'SELECT COUNT(*) as total FROM NewsletterController_Auto_65';
       if (status && status !== 'all') {
         countQuery += ' WHERE status = ?';
       }
@@ -225,7 +225,7 @@ class NewsletterController {
       
       // Obter todos os inscritos ativos
       const subscribers = await db.all(
-        'SELECT email, name FROM newsletter_subscribers WHERE status = ? ORDER BY subscribedAt DESC',
+        'SELECT email, name FROM NewsletterController_Auto_65 WHERE status = ? ORDER BY subscribedAt DESC',
         'active'
       );
 
@@ -286,21 +286,21 @@ class NewsletterController {
       const db = await getDb();
 
       const totalActive = await db.get(
-        'SELECT COUNT(*) as count FROM newsletter_subscribers WHERE status = ?',
+        'SELECT COUNT(*) as count FROM NewsletterController_Auto_65 WHERE status = ?',
         'active'
       );
 
       const totalUnsubscribed = await db.get(
-        'SELECT COUNT(*) as count FROM newsletter_subscribers WHERE status = ?',
+        'SELECT COUNT(*) as count FROM NewsletterController_Auto_65 WHERE status = ?',
         'unsubscribed'
       );
 
       const totalAll = await db.get(
-        'SELECT COUNT(*) as count FROM newsletter_subscribers'
+        'SELECT COUNT(*) as count FROM NewsletterController_Auto_65'
       );
 
       const recentSubscribers = await db.all(
-        'SELECT email, name, subscribedAt FROM newsletter_subscribers WHERE status = ? ORDER BY subscribedAt DESC LIMIT 10',
+        'SELECT email, name, subscribedAt FROM NewsletterController_Auto_65 WHERE status = ? ORDER BY subscribedAt DESC LIMIT 10',
         'active'
       );
 
@@ -324,4 +324,4 @@ class NewsletterController {
   }
 }
 
-module.exports = NewsletterController;
+module.exports = NewsletterController_Auto_65;

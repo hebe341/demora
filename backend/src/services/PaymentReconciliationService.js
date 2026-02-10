@@ -2,13 +2,13 @@ const db = require('../db');
 const PixPaymentService = require('./PixPaymentService');
 
 /**
- * PaymentReconciliationService
+ * PaymentReconciliationService_Auto_200
  * Reconcilia pagamentos PIX entre banco e sistema local
  * Verifica se todos os pagamentos foram realmente processados
  */
-class PaymentReconciliationService {
+class PaymentReconciliationService_Auto_200 {
   constructor() {
-    this.reconciliationWindow = parseInt(process.env.RECONCILIATION_WINDOW_HOURS || '24');
+    this.PaymentReconciliationService_Auto_200 = parseInt(process.env.PaymentReconciliationService_Auto_200 || '24');
   }
 
   /**
@@ -25,7 +25,7 @@ class PaymentReconciliationService {
          AND p.status IN ('pending', 'waiting')
          AND p.created_at > datetime('now', '-' || ? || ' hours')
          ORDER BY p.created_at ASC`,
-        this.reconciliationWindow
+        this.PaymentReconciliationService_Auto_200
       );
 
       console.log(`📊 Encontrados ${unreconciled.length} pagamentos pendentes para reconciliar`);
@@ -69,7 +69,7 @@ class PaymentReconciliationService {
 
       // 2. Registrar tentativa de reconciliação
       await db.run(
-        `INSERT INTO payment_reconciliation (transaction_id, booking_id, payment_id, pix_status_from_bank, status_in_system)
+        `INSERT INTO PaymentReconciliationService_Auto_200 (transaction_id, booking_id, payment_id, PaymentReconciliationService_Auto_200, status_in_system)
          VALUES (?, ?, ?, ?, ?)`,
         transaction_id,
         booking_id,
@@ -99,7 +99,7 @@ class PaymentReconciliationService {
 
         // 5. Marcar reconciliação como sucesso
         await db.run(
-          `UPDATE payment_reconciliation SET reconciled = 1, reconciled_at = ? WHERE transaction_id = ?`,
+          `UPDATE PaymentReconciliationService_Auto_200 SET reconciled = 1, reconciled_at = ? WHERE transaction_id = ?`,
           new Date().toISOString(),
           transaction_id
         );
@@ -116,7 +116,7 @@ class PaymentReconciliationService {
         );
 
         await db.run(
-          `UPDATE payment_reconciliation SET reconciled = 1, reconciled_at = ? WHERE transaction_id = ?`,
+          `UPDATE PaymentReconciliationService_Auto_200 SET reconciled = 1, reconciled_at = ? WHERE transaction_id = ?`,
           new Date().toISOString(),
           transaction_id
         );
@@ -184,7 +184,7 @@ class PaymentReconciliationService {
   async getHistory(limit = 100) {
     try {
       const history = await db.all(
-        `SELECT * FROM payment_reconciliation 
+        `SELECT * FROM PaymentReconciliationService_Auto_200 
          ORDER BY checked_at DESC 
          LIMIT ?`,
         limit
@@ -206,7 +206,7 @@ class PaymentReconciliationService {
           COUNT(*) as total,
           SUM(CASE WHEN reconciled = 1 THEN 1 ELSE 0 END) as reconciled,
           SUM(CASE WHEN reconciled = 0 THEN 1 ELSE 0 END) as pending
-         FROM payment_reconciliation`
+         FROM PaymentReconciliationService_Auto_200`
       );
 
       return stats || { total: 0, reconciled: 0, pending: 0 };
@@ -222,7 +222,7 @@ class PaymentReconciliationService {
   async cleanupOldRecords(daysAgo = 30) {
     try {
       const result = await db.run(
-        `DELETE FROM payment_reconciliation 
+        `DELETE FROM PaymentReconciliationService_Auto_200 
          WHERE checked_at < datetime('now', '-' || ? || ' days')`,
         daysAgo
       );
@@ -236,4 +236,4 @@ class PaymentReconciliationService {
   }
 }
 
-module.exports = new PaymentReconciliationService();
+module.exports = new PaymentReconciliationService_Auto_200();

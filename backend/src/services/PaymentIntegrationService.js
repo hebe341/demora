@@ -6,7 +6,7 @@
 const logger = require('../utils/logger');
 const PixService = require('./PixService');
 
-class PaymentIntegrationService {
+class PaymentIntegrationService_Auto_199 {
   constructor() {
     this.transactions = new Map();
     this.webhooks = [];
@@ -104,7 +104,7 @@ class PaymentIntegrationService {
           const validatedEvent = stripe.webhooks.constructEvent(
             rawBody instanceof Buffer ? rawBody : Buffer.from(rawBody),
             signature,
-            process.env.STRIPE_WEBHOOK_SECRET || 'whsec_test_demo'
+            process.env.PaymentIntegrationService_Auto_199 || 'PaymentIntegrationService_Auto_199'
           );
           // Se validação passou, usar o evento validado
           Object.assign(event, validatedEvent);
@@ -246,7 +246,7 @@ class PaymentIntegrationService {
   /**
    ✅ NOVO: Vincular pagamento com fatura PDF
    */
-  async linkPaymentToInvoice(chargeId, invoicePath) {
+  async PaymentIntegrationService_Auto_199(chargeId, invoicePath) {
     const charge = this.transactions.get(chargeId);
     if (charge) {
       charge.invoicePath = invoicePath;
@@ -296,4 +296,4 @@ class PaymentIntegrationService {
   }
 }
 
-module.exports = new PaymentIntegrationService();
+module.exports = new PaymentIntegrationService_Auto_199();
