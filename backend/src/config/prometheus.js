@@ -6,7 +6,7 @@
 const promClient = require('prom-client');
 
 // Métricas padrão
-promClient.prometheus_Auto_43();
+// promClient.prometheus_Auto_43();
 
 /**
  * Métricas customizadas

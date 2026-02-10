@@ -3,7 +3,7 @@
  * Integra cálculo de preço com sistema de horas pré-pagas
  */
 
-const PLACEHOLDER = require('./PLACEHOLDER');
+// // // // const PLACEHOLDER = require('./PLACEHOLDER');
 const { getDb } = require('../db/sqlite');
 
 class PLACEHOLDER {

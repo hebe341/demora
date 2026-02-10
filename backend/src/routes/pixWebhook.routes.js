@@ -4,20 +4,20 @@
 
 const express = require('express');
 const router = express.Router();
-const PLACEHOLDER = require('../controllers/PLACEHOLDER');
+// const PLACEHOLDER = require('../controllers/PLACEHOLDER');
 const { authenticateToken, authorizeRole } = require('../middleware/auth');
 
 // POST /api/webhooks/pix - Receber webhook do banco (sem autenticação)
-router.post('/', PLACEHOLDER.handlePixWebhook);
+// router.post('/', PLACEHOLDER.handlePixWebhook);
 
 // GET /api/webhooks/pix/status/:pixTransactionId - Obter status PIX (sem autenticação)
-router.get('/status/:pixTransactionId', PLACEHOLDER.getPixStatus);
+// router.get('/status/:pixTransactionId', PLACEHOLDER.getPixStatus);
 
 // GET /api/webhooks/pix/validate/:pixTransactionId - Validar via API bancária (com autenticação)
-router.get(
-  '/validate/:pixTransactionId',
-  PLACEHOLDER.validatePixStatus
-);
+// router.get(
+//   '/validate/:pixTransactionId',
+//   PLACEHOLDER.validatePixStatus
+// );
 
 // POST /api/webhooks/pix/confirm/:pixTransactionId - Confirmar manualmente (ADMIN)
 router.post(

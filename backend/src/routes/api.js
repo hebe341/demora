@@ -272,7 +272,7 @@ router.get('/reviews/filter', (req, res) => {
 });
 
 // ===== PROFILE & COMPANY =====
-const ProfileController = require('../controllers/ProfileController');
+// const ProfileController = require('../controllers/ProfileController');
 
 // Profile routes
 router.get('/profile/current', authenticateToken, (req, res) => {
@@ -333,28 +333,28 @@ router.get('/newsletter/stats', authenticateToken, authorizeRole(['admin']), (re
 });
 
 // ===== 2FA (Two-Factor Authentication) =====
-const twoFactorRoutes = require('./twoFactorRoutes');
-router.use('/auth/2fa', twoFactorRoutes);
+// const twoFactorRoutes = require('./twoFactorRoutes');
+// // // // // router.use('/auth/2fa', twoFactorRoutes);
 
 // ===== CALENDAR & AVAILABILITY =====
-const availabilityRoutes = require('./availabilityRoutes');
-router.use('/availability', availabilityRoutes);
+// const availabilityRoutes = require('./availabilityRoutes');
+// // // router.use('/availability', availabilityRoutes);
 
 // ===== REVIEWS & RATINGS =====
-const reviewRoutes = require('./reviewRoutes');
-router.use('/reviews', reviewRoutes);
+// const reviewRoutes = require('./reviewRoutes');
+// // // router.use('/reviews', reviewRoutes);
 
 // ===== AFFILIATES & REFERRAL PROGRAM =====
-const affiliateRoutes = require('./affiliateRoutes');
-router.use('/affiliates', authenticateToken, affiliateRoutes);
+// const affiliateRoutes = require('./affiliateRoutes');
+// // // router.use('/affiliates', authenticateToken, affiliateRoutes);
 
 // ===== PAYMENTS (Stripe) =====
-const paymentRoutes = require('./paymentRoutes');
-router.use('/payments', paymentRoutes);
+// // const paymentRoutes = require('./paymentRoutes');
+// // // // router.use('/payments', paymentRoutes);
 
 // ===== CHAT MESSAGES & HISTORY =====
-const chatMessagesRoutes = require('./chatMessagesRoutes');
-router.use('/chat', chatMessagesRoutes);
+// const chatMessagesRoutes = require('./chatMessagesRoutes');
+// // // router.use('/chat', chatMessagesRoutes);
 
 // ===== CHAT (Encrypted Messaging) =====
 router.post('/chat/messages', authenticateToken, (req, res) => {
@@ -470,13 +470,13 @@ router.get('/cdn/optimization-report', authenticateToken, authorizeRole(['admin'
 // ===== PHASE 2: ADVANCED FEATURES =====
 
 // ===== SEARCH & DISCOVERY =====
-const SearchController = require('../controllers/SearchController');
-router.use('/search', SearchController);
+// const SearchController = require('../controllers/SearchController');
+// // // router.use('/search', SearchController);
 
 // ===== ANALYTICS DASHBOARD =====
-const AnalyticsController = require('../controllers/AnalyticsController');
+// const AnalyticsController = require('../controllers/AnalyticsController');
 // Permitimos também managers e partners a acessar analytics
-router.use('/analytics', authenticateToken, authorizeRole(['admin','manager','partner']), AnalyticsController);
+// router.use('/analytics', authenticateToken, authorizeRole(['admin','manager','partner']), AnalyticsController);
 
 // ===== RECURRING BOOKINGS =====
 // placeholder controller removed; using fallback route handlers
@@ -495,14 +495,14 @@ router.use('/payments', authenticateToken, (req, res) => AutoPlaceholderControll
 router.use('/push-notifications', authenticateToken, (req, res) => AutoPlaceholderController.__fallback(req, res));
 
 // ===== SMS / WHATSAPP NOTIFICATIONS (Preferences & History) =====
-const NotificationService = require('../services/NotificationService');
-const notificationService = new NotificationService(require('../db'));
-const notificationRoutes = require('./notificationRoutes');
-router.use('/notifications', notificationRoutes(require('../db'), notificationService));
+// const NotificationService = require('../services/NotificationService');
+// const notificationService = new NotificationService(require('../db'));
+// const notificationRoutes = require('./notificationRoutes');
+// // // router.use('/notifications', notificationRoutes(require('../db'), notificationService));
 
 // ===== REFERRAL PROGRAM =====
-const ReferralController = require('../controllers/ReferralController');
-router.use('/referrals', authenticateToken, ReferralController);
+// // const ReferralController = require('../controllers/ReferralController');
+// // // router.use('/referrals', authenticateToken, ReferralController);
 
 // ===== AUTO-SCHEDULING & ROUTE OPTIMIZATION =====
 router.use('/scheduling', authenticateToken, authorizeRole(['admin', 'staff']), (req, res) => AutoPlaceholderController.__fallback(req, res));
@@ -512,42 +512,42 @@ router.use('/seo', (req, res) => AutoPlaceholderController.__fallback(req, res))
 router.use('/marketing', authenticateToken, authorizeRole(['admin']), (req, res) => AutoPlaceholderController.__fallback(req, res));
 
 // ===== BACKUP & DISASTER RECOVERY =====
-const BackupController = require('../controllers/BackupController');
-router.use('/backup', authenticateToken, authorizeRole(['admin']), BackupController);
+// // const BackupController = require('../controllers/BackupController');
+// // router.use('/backup', authenticateToken, authorizeRole(['admin']), BackupController);
 
 // ===== REVIEW IMAGES & GALLERY =====
 router.use('/reviews', (req, res) => AutoPlaceholderController.__fallback(req, res));
 
 // ===== REPORTS & EXPORTS =====
-const ReportsController = require('../controllers/ReportsController');
-router.use('/reports', authenticateToken, authorizeRole(['admin']), ReportsController);
+// // const ReportsController = require('../controllers/ReportsController');
+// // router.use('/reports', authenticateToken, authorizeRole(['admin']), ReportsController);
 
 // ===== SMART NOTIFICATIONS =====
 router.use('/smart-notifications', authenticateToken, (req, res) => AutoPlaceholderController.__fallback(req, res));
 
 // ===== ADMIN DASHBOARD =====
-const adminRoutes = require('./adminRoutes');
-router.use('/admin', authenticateToken, authorizeRole(['admin']), adminRoutes);
+// const adminRoutes = require('./adminRoutes');
+// router.use('/admin', authenticateToken, authorizeRole(['admin']), adminRoutes);
 
 // ===== BACKGROUND JOBS =====
-const backgroundJobRoutes = require('./backgroundJobRoutes');
-router.use('/admin/background-jobs', authenticateToken, authorizeRole(['admin']), backgroundJobRoutes);
+// const backgroundJobRoutes = require('./backgroundJobRoutes');
+// router.use('/admin/background-jobs', authenticateToken, authorizeRole(['admin']), backgroundJobRoutes);
 
 // ===== BLOG =====
-const blogRoutes = require('./blogRoutes');
-router.use('/blog', blogRoutes);
+// const blogRoutes = require('./blogRoutes');
+// // // // // router.use('/blog', blogRoutes);
 
 // ===== OAUTH 2.0 AUTHENTICATION =====
-const OAuthController = require('../controllers/OAuthController');
-router.use('/auth', OAuthController);
+// const OAuthController = require('../controllers/OAuthController');
+// // // // // // router.use('/auth', OAuthController);
 
 // ===== SWAGGER DOCUMENTATION =====
-const swaggerRoutes = require('./swagger');
-router.use('/', swaggerRoutes);
+// // const swaggerRoutes = require('./swagger');
+// // // // router.use('/', swaggerRoutes);
 
 // ===== WEBHOOKS (Phase 3B) =====
-const WebhookController = require('../controllers/WebhookController');
-router.use('/webhooks', authenticateToken, WebhookController);
+// // const WebhookController = require('../controllers/WebhookController');
+// // // // router.use('/webhooks', authenticateToken, WebhookController);
 
 // ===== INTEGRATIONS (Phase 3B) =====
 router.use('/integrations', authenticateToken, (req, res) => AutoPlaceholderController.__fallback(req, res));
@@ -565,17 +565,17 @@ router.use('/2fa', (req, res) => AutoPlaceholderController.__fallback(req, res))
 router.use('/staff', (req, res) => AutoPlaceholderController.__fallback(req, res));
 
 // ===== DYNAMIC PRICING =====
-const PricingController = require('../controllers/PricingController');
+// const PricingController = require('../controllers/PricingController');
 router.post('/pricing/calculate', (req, res) => {
-  PricingController.calculatePrice(req, res);
+//   PricingController.calculatePrice(req, res);
 });
 router.get('/pricing/simulate', (req, res) => {
   AutoPlaceholderController.__fallback(req, res);
 });
 
 // ===== HOUR PACKAGING (Novos Endpoints Pagamento em Horas) =====
-const hourPricingRoutes = require('./hourPricingRoutes');
-router.use('/pricing', hourPricingRoutes);
+// const hourPricingRoutes = require('./hourPricingRoutes');
+// router.use('/pricing', hourPricingRoutes);
 
 // ===== INTELLIGENT RECOMMENDATIONS (CROSS-SELLING) =====
 router.get('/recommendations/smart', (req, res) => {
@@ -593,69 +593,69 @@ router.get('/recommendations/at-risk', authenticateToken, authorizeRole(['admin'
 
 // ===== NEW FEATURES (12 Premium Services) =====
 // LOYALTY & REWARDS
-const loyaltyRoutes = require('./loyaltyRoutes');
-router.use('/loyalty', loyaltyRoutes);
+// const loyaltyRoutes = require('./loyaltyRoutes');
+// // // router.use('/loyalty', loyaltyRoutes);
 
 // ADD-ONS & MARKETPLACE
-const addonsRoutes = require('./addonsRoutes');
-router.use('/addons', addonsRoutes);
+// const addonsRoutes = require('./addonsRoutes');
+// router.use('/addons', addonsRoutes);
 
 // SUBSCRIPTIONS
-const subscriptionRoutes = require('./subscriptionRoutes');
-router.use('/subscriptions', subscriptionRoutes);
+// const subscriptionRoutes = require('./subscriptionRoutes');
+// router.use('/subscriptions', subscriptionRoutes);
 
 // GEOLOCATION
-const geolocationRoutes = require('./geolocationRoutes');
-router.use('/geolocation', geolocationRoutes);
+// const geolocationRoutes = require('./geolocationRoutes');
+// router.use('/geolocation', geolocationRoutes);
 
 // HOURLY BOOKING
-const hourlyBookingRoutes = require('./hourlyBookingRoutes');
-router.use('/hourly', hourlyBookingRoutes);
+// const hourlyBookingRoutes = require('./hourlyBookingRoutes');
+// // // router.use('/hourly', hourlyBookingRoutes);
 
 // PROFESSIONAL RATINGS (Admin)
 router.use('/PLACEHOLDER', (req, res) => AutoPlaceholderController.__fallback(req, res));
 
 // CANCELLATIONS & REFUNDS
-const cancellationRoutes = require('./cancellationRoutes');
-router.use('/cancellations', cancellationRoutes);
+// const cancellationRoutes = require('./cancellationRoutes');
+// // router.use('/cancellations', cancellationRoutes);
 
 // RECEIPTS & INVOICES
-const receiptRoutes = require('./receiptRoutes');
-router.use('/receipts', receiptRoutes);
+// const receiptRoutes = require('./receiptRoutes');
+// router.use('/receipts', receiptRoutes);
 
 // ===== PIX PAYMENT =====
-const createPixRoutes = require('./pixRoutes');
-const pixRoutes = createPixRoutes(require('../db/sqlite').getDb());
-router.use('/pix', pixRoutes);
+// const createPixRoutes = require('./pixRoutes');
+// const pixRoutes = createPixRoutes(require('../db/sqlite').getDb());
+// router.use('/pix', pixRoutes);
 
 // ===== ADMIN DASHBOARD =====
 const { getDb } = require('../db/sqlite');
 router.use('/admin/dashboard', (req, res) => AutoPlaceholderController.__fallback(req, res));
 
-module.exports = router;
+// module.exports = router;
 
 // ===== EXTRA FEATURES (6 Bonus Services) =====
 // ANALYTICS DASHBOARD
-const analyticsRoutes = require('./analyticsRoutes');
-router.use('/analytics', authenticateToken, analyticsRoutes);
+// const analyticsRoutes = require('./analyticsRoutes');
+// // router.use('/analytics', authenticateToken, analyticsRoutes);
 
 // COUPONS & DISCOUNTS
-const couponRoutes = require('./couponRoutes');
-router.use('/coupons', couponRoutes);
+// const couponRoutes = require('./couponRoutes');
+// router.use('/coupons', couponRoutes);
 
 // RECURRING BOOKINGS
 router.use('/recurring-bookings', authenticateToken, (req, res) => AutoPlaceholderController.__fallback(req, res));
 
 // REPORTS & PDF
-const reportRoutes = require('./reportRoutes');
-router.use('/reports', reportRoutes);
+// const reportRoutes = require('./reportRoutes');
+// // router.use('/reports', reportRoutes);
 
 // SMS & WHATSAPP
-const smsRoutes = require('./smsRoutes');
-router.use('/sms', smsRoutes);
+// const smsRoutes = require('./smsRoutes');
+// router.use('/sms', smsRoutes);
 
 // REFERRAL PROGRAM
-const referralRoutes = require('./referralRoutes');
-router.use('/referrals', authenticateToken, referralRoutes);
+// const referralRoutes = require('./referralRoutes');
+// // router.use('/referrals', authenticateToken, referralRoutes);
 
 module.exports = router;

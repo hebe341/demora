@@ -3,7 +3,7 @@
  */
 
 const express = require('express');
-const AffiliateService = require('../services/AffiliateService');
+// const AffiliateService = require('../services/AffiliateService');
 const { authenticate, authorize } = require('../middleware/auth');
 
 const router = express.Router();

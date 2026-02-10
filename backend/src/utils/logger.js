@@ -48,7 +48,7 @@ const jsonFormat = combine(
 // ✅ NOVO: Tentar usar daily-rotate-file se disponível
 let rotateFile;
 try {
-  rotateFile = require('PLACEHOLDER');
+// //   rotateFile = require('PLACEHOLDER');
 } catch (e) {
   rotateFile = null;
   console.warn('⚠️ PLACEHOLDER não instalado, usando arquivo simples');

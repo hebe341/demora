@@ -12,7 +12,7 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const apiRoutes = require('./routes/api');
-const webhookRoutes = require('./routes/webhooks');
+// const webhookRoutes = require('./routes/webhooks');
 const adminRoutes = require('./routes/admin');
 const Scheduler = require('./utils/scheduler');
 const ChatService = require('./services/ChatService');
@@ -27,7 +27,7 @@ const { ensureSchema } = require('./db/ensureSchema');
 const { validateEnv } = require('./config/envValidator');
 const { globalErrorHandler, handle404, asyncHandler } = require('./middleware/globalErrorHandler');
 const { initializeSwagger } = require('./config/swagger');
-const { metricsMiddleware, metricsEndpoint } = require('./config/prometheus');
+// const { metricsMiddleware, metricsEndpoint } = require('./config/prometheus');
 
 // ===== VALIDATE ENVIRONMENT =====
 validateEnv();
@@ -145,7 +145,7 @@ if (process.env.NODE_ENV !== 'test' && process.env.SKIP_RATE_LIMIT !== 'true') {
 }
 
 app.use('/api', apiRoutes);
-app.use('/webhooks', webhookRoutes);
+// app.use('/webhooks', webhookRoutes);
 app.use('/admin', adminRoutes);
 // Também expor rotas administrativas sob /api/admin para compatibilidade com testes
 app.use('/api/admin', adminRoutes);
@@ -209,8 +209,8 @@ app.get('/', (req, res) => {
 });
 
 // ===== METRICS & MONITORING =====
-app.use(metricsMiddleware);
-app.get('/metrics', metricsEndpoint);
+// app.use(metricsMiddleware);
+// app.get('/metrics', metricsEndpoint);
 
 // ===== SWAGGER DOCUMENTATION =====
 initializeSwagger(app);

@@ -4,7 +4,7 @@
 
 const express = require('express');
 const router = express.Router();
-const AvailabilityService = require('../services/AvailabilityService');
+// const AvailabilityService = require('../services/AvailabilityService');
 const { authenticateToken } = require('../middleware/auth');
 
 /**

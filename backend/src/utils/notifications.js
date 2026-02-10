@@ -3,7 +3,7 @@
  * Funções auxiliares de notificação
  */
 
-const PLACEHOLDER = require('../controllers/PLACEHOLDER');
+// // // // const PLACEHOLDER = require('../controllers/PLACEHOLDER');
 const logger = require('./logger');
 
 class NotificationService {

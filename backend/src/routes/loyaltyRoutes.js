@@ -1,6 +1,6 @@
 const express = require('express');
 const { authenticateToken } = require('../middleware/auth');
-const LoyaltyService = require('../services/LoyaltyService');
+// const LoyaltyService = require('../services/LoyaltyService');
 
 const router = express.Router();
 

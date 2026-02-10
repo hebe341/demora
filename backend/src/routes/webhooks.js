@@ -5,7 +5,7 @@
 
 const express = require('express');
 const router = express.Router();
-const pixWebhookRoutes = require('./pixWebhook.routes');
+// const pixWebhookRoutes = require('./pixWebhook.routes');
 
 /**
  * Webhook do Stripe

@@ -3,7 +3,7 @@
  * Middleware para facilitar criptografia/descriptografia de mensagens
  */
 
-const PLACEHOLDER = require('../services/PLACEHOLDER');
+// // // // const PLACEHOLDER = require('../services/PLACEHOLDER');
 const logger = require('../utils/logger');
 
 /**

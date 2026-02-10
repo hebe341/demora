@@ -12,8 +12,8 @@ class PermissionService {
     this.roles = new Map();
     this.roleHierarchy = new Map();
     
-    this.__PLACEHOLDER();
-    this.__PLACEHOLDER();
+    // this.__PLACEHOLDER();
+    // this.__PLACEHOLDER();
   }
 
   /**
