@@ -25,6 +25,8 @@ export default function LeidyHome() {
 
       <LeidyHeader />
 
+      <div className="h-4"></div>
+
       {/* Hero Section */}
       <section 
         className="hero pt-32 pb-20 text-white text-center bg-cover bg-center relative"

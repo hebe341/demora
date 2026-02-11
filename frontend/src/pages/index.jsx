@@ -97,7 +97,7 @@ export default function Home() {
         </script>
       </Head>
 
-      <div className="min-h-screen flex flex-col bg-gradient-to-b from-green-50 via-white to-green-50 dark:bg-slate-900">
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-green-50 via-white to-green-50 dark:bg-slate-900 pt-20">
         <Header />
         <main className="flex-grow">
           {/* ========== HERO COM CALCULADORA ========== */}
