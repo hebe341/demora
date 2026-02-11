@@ -105,7 +105,7 @@ export default function Home() {
             {/* Background decorativo */}
             <div className="absolute inset-0 -z-10">
               <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-green-200 to-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-              <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-200 to-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob decoded"></div>
+              <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-br from-emerald-200 to-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
             </div>
 
             <div className="container mx-auto max-w-7xl">
